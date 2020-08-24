@@ -8,3 +8,17 @@ ThemeData appTheme() {
     visualDensity: VisualDensity.adaptivePlatformDensity,
   );
 }
+
+// style for main location text on home page.
+TextStyle locationTitle() {
+  return TextStyle(
+    fontSize: 40
+  );
+}
+
+// style for date information at top of home page.
+TextStyle dateDisplay() {
+  return TextStyle(
+    fontSize: 20
+  );
+}

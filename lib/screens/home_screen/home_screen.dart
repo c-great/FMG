@@ -16,30 +16,31 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   EmployeeLocation _location = getLocation();
 
-  void _changeLocation(
-      Location location,
-      {String additional1, String additional2}) {
-    setLocation(EmployeeLocation(
-        location: location,
-        additionalInfo1: additional1,
-        additionalInfo2: additional2));
+  void _updateLocation(EmployeeLocation employeeLocation) {
+    setLocation(employeeLocation);
     this._location = getLocation();
     setState(() {});
   }
 
-  void _changeToOffice({String office}) {
-    _changeLocation(Location.OFFICE, additional1: office);
+  void _changeToOffice({OfficeLocation office, String additionalInfo}) {
+    EmployeeLocation location = EmployeeAtOffice(
+      officeLocation: office,
+      additionalInfo: additionalInfo,
+    );
+    _updateLocation(location);
   }
 
   void _changeToHome() {
-    _changeLocation(Location.HOME);
+    EmployeeLocation location = EmployeeAtHome();
+    _updateLocation(location);
   }
 
-  void _changeToAbsent({String absentType, String additional}) {
-    _changeLocation(
-        Location.ABSENT,
-        additional1: absentType,
-        additional2: additional);
+  void _changeToAbsent({AbsentOptions absentType, String additionalInfo}) {
+    EmployeeLocation location = EmployeeAbsent(
+      absentOptions: absentType,
+      additionalInfo: additionalInfo,
+    );
+    _updateLocation(location);
   }
 
   @override
@@ -50,7 +51,7 @@ class _HomePageState extends State<HomePage> {
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.settings),
-            // TODO: make button open an options menu
+            // TODO: make button open an settings menu
             onPressed: null,
           )
         ],
@@ -58,14 +59,37 @@ class _HomePageState extends State<HomePage> {
       body: Column(
         children: [
           RecordedLocationDisplay(
-              location: _location,
-              date: getDateOfInterest(),
+            location: _location,
+            date: getDateOfInterest(),
           ),
-          LargeButton(title: "Office", callback: _changeToOffice),
-          LargeButton(title: "Home", callback: _changeToHome,),
-          LargeButton(title: "Absent Options", callback: _changeToAbsent,),
+          selectLocationText(_location),
+          Wrap(runSpacing: 10, children: <Widget>[
+            LargeButton(title: "Office", callback: _changeToOffice),
+            LargeButton(
+              title: "Home",
+              callback: _changeToHome,
+            ),
+            // TODO: Implement this properly
+            LargeButton(
+              title: "Absent Options",
+              callback: _changeToAbsent,
+            ),
+          ]),
+          Spacer(),
+          // TODO: Implement this
+          LargeButton(title: "Schedule Future Locations"),
         ],
       ),
     );
   }
+}
+
+Widget selectLocationText(EmployeeLocation location) {
+  String text;
+  if (location.location == Location.UNDEFINED)
+    text = "Choose your location:";
+  else
+    text = "Change your location:";
+
+  return Align(child: Text(text,), alignment: Alignment.centerLeft);
 }

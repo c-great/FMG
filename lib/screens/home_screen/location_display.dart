@@ -13,12 +13,14 @@ class RecordedLocationDisplay extends StatelessWidget {
 
     return Column(
       children: <Widget>[
+        SizedBox(height: 10,),
         Text(
             "Your recorded location for TODAY "
                 "(${new DateFormat.MMMMEEEEd().format(date)}) "
                 "is:"
         ),
-        Text(location.location.toString())
+        SizedBox(height: 10,),
+        location.display(),
       ],
     );
   }
