@@ -16,6 +16,13 @@ TextStyle locationTitle() {
   );
 }
 
+// style for sub location text on home page.
+TextStyle subTitle() {
+  return TextStyle(
+      fontSize: 20
+  );
+}
+
 // style for date information at top of home page.
 TextStyle dateDisplay() {
   return TextStyle(

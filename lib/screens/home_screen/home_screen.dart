@@ -64,20 +64,25 @@ class _HomePageState extends State<HomePage> {
           ),
           Wrap(runSpacing: 10, children: <Widget>[
             selectLocationText(_location),
-            LargeButton(title: "Office", callback: _changeToOffice),
             LargeButton(
-              title: "Home",
+                child: Row(children: <Widget>[
+                  Expanded(child: OfficeDropDownButton()),
+                  Expanded(child: Text("Office")),
+            ]),
+                callback: _changeToOffice),
+            LargeButton(
+              child: Text("Home"),
               callback: _changeToHome,
             ),
             // TODO: Implement this properly
             LargeButton(
-              title: "Absent Options",
+              child: Text("Absent Options"),
               callback: _changeToAbsent,
             ),
           ]),
           Spacer(),
           // TODO: Implement this
-          LargeButton(title: "Schedule Future Locations"),
+          LargeButton(child: Text("Schedule Future Locations")),
         ],
       ),
     );
