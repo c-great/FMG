@@ -62,8 +62,8 @@ class _HomePageState extends State<HomePage> {
             location: _location,
             date: getDateOfInterest(),
           ),
-          selectLocationText(_location),
           Wrap(runSpacing: 10, children: <Widget>[
+            selectLocationText(_location),
             LargeButton(title: "Office", callback: _changeToOffice),
             LargeButton(
               title: "Home",
@@ -91,5 +91,5 @@ Widget selectLocationText(EmployeeLocation location) {
   else
     text = "Change your location:";
 
-  return Align(child: Text(text,), alignment: Alignment.centerLeft);
+  return Align(child: Text(text,), alignment: Alignment.bottomLeft);
 }
