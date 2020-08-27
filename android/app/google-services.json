@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "158848092514",
+    "firebase_url": "https://fmg-remote-work-tracker.firebaseio.com",
+    "project_id": "fmg-remote-work-tracker",
+    "storage_bucket": "fmg-remote-work-tracker.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:158848092514:android:113589c5a9ef787ebfc43b",
+        "android_client_info": {
+          "package_name": "nz.ac.massey.u159356.group4.fmg_remote_work_tracker"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "158848092514-dvqp3dh2slgl95rs0fgbgtc5l78nhgf7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCGlColNn_8dKgtkBRg9LrKemdsVfc1_-I"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "158848092514-dvqp3dh2slgl95rs0fgbgtc5l78nhgf7.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
