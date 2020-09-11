@@ -14,7 +14,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  EmployeeLocation _location = getLocation();
+  Future<EmployeeLocation> _location = getLocation();
 
   void _updateLocation(EmployeeLocation employeeLocation) {
     setLocation(employeeLocation);
@@ -68,7 +68,7 @@ class _HomePageState extends State<HomePage> {
                 child: Row(children: <Widget>[
                   Expanded(child: OfficeDropDownButton()),
                   Expanded(child: Text("Office")),
-            ]),
+                ]),
                 callback: _changeToOffice),
             LargeButton(
               child: Text("Home"),
@@ -89,12 +89,24 @@ class _HomePageState extends State<HomePage> {
   }
 }
 
-Widget selectLocationText(EmployeeLocation location) {
-  String text;
-  if (location.location == Location.UNDEFINED)
-    text = "Choose your location:";
-  else
-    text = "Change your location:";
-
-  return Align(child: Text(text,), alignment: Alignment.bottomLeft);
+Widget selectLocationText(Future<EmployeeLocation> location) {
+  return FutureBuilder<EmployeeLocation>(
+    future: location,
+    builder: (context, snapshot) {
+      String text;
+      if (snapshot.hasData) {
+        if (snapshot.data.location == Location.UNDEFINED)
+          text = "Choose your location:";
+        else
+          text = "Change your location:";
+      } else {
+        text = "";
+      }
+      return Align(
+          child: Text(
+            text,
+          ),
+          alignment: Alignment.bottomLeft);
+    },
+  );
 }

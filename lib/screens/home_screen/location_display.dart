@@ -3,7 +3,7 @@ import 'package:intl/intl.dart';
 import 'package:fmg_remote_work_tracker/models/employee_location.dart';
 
 class RecordedLocationDisplay extends StatelessWidget {
-  final EmployeeLocation location;
+  final Future<EmployeeLocation> location;
   final Future<DateTime> date;
 
   RecordedLocationDisplay({this.location, this.date});
@@ -27,15 +27,19 @@ class RecordedLocationDisplay extends StatelessWidget {
                 return Text("Waiting for data...");
               }
             }),
-        // Text(
-        //     "Your recorded location for TODAY "
-        //         "(${new DateFormat.MMMMEEEEd().format(date)}) "
-        //         "is:"
-        // ),
         SizedBox(
           height: 10,
         ),
-        location.display(),
+        FutureBuilder<EmployeeLocation>(
+          future: location,
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              return snapshot.data.display();
+            } else {
+              return displayBox(Text(""));
+            }
+          }
+        )
       ],
     );
   }

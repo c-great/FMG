@@ -73,6 +73,24 @@ class EmployeeLocation {
 
   EmployeeLocation({this.location = Location.UNDEFINED, this.working});
 
+  factory EmployeeLocation.fromJSON(Map<String, dynamic> json) {
+    var location = json['location'];
+    if (location == "office") {
+      return new EmployeeAtOffice(
+        //fixme: officeLocation is not a String
+          officeLocation: json['office'],
+          additionalInfo: json['additionalInfo']);
+    } else if (location == "home") {
+      return new EmployeeAtHome();
+    } else if (location == "absent") {
+      return new EmployeeAbsent(
+        //fixme: absentOptions is not a String
+          absentOptions: json['absenceType'],
+          additionalInfo: json['additionalInfo']);
+    }
+      return new EmployeeLocation();
+  }
+
   Widget display() {
     return displayBox(Column(
     children: <Widget>[Text("Location Undefined")],
