@@ -3,6 +3,7 @@ import 'package:fmg_remote_work_tracker/database_interaction/basic_interaction.d
 import 'package:fmg_remote_work_tracker/models/employee_location.dart';
 import 'package:fmg_remote_work_tracker/components/buttons.dart';
 import 'location_display.dart';
+import 'package:fmg_remote_work_tracker/models/team_info.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key key, this.title}) : super(key: key);
@@ -43,6 +44,11 @@ class _HomePageState extends State<HomePage> {
     _updateLocation(location);
   }
 
+  void _changeScreenMyTeams() {
+    var teamInfo = TeamInfo();
+    teamInfo.teamName();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -78,6 +84,10 @@ class _HomePageState extends State<HomePage> {
             LargeButton(
               child: Text("Absent Options"),
               callback: _changeToAbsent,
+            ),
+            LargeButton(
+              child: Text("My Teams"),
+              callback: _changeScreenMyTeams,
             ),
           ]),
           Spacer(),
