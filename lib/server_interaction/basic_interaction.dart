@@ -8,23 +8,25 @@ import 'package:http/http.dart' as http;
 var serverURL =
     "https://fmg-server.azurewebsites.net/FMG_REST_service/fmg-api/";
 
-LocationData locationData = LocationData();
-
 Future<EmployeeLocation> getLocation() async {
   var employeeLocationJSON = await postRequest("getLocation");
   return EmployeeLocation.fromJSON(employeeLocationJSON);
 }
 
-void setLocation(EmployeeLocation location) {
-  locationData.location = location;
+Future<bool> setLocation(EmployeeLocation location) async {
+  var employeeLocationSetBoolJSON =
+      await postRequest("setLocation", parameters: location.toMap());
+  return employeeLocationSetBoolJSON['success'];
 }
 
-Future<Map<String, dynamic>> postRequest (String functionURL,
+Future<Map<String, dynamic>> postRequest(String functionURL,
     {Map<String, String> parameters}) async {
   Map<String, dynamic> output;
   var response = await http.post(
-      serverURL + functionURL,
-    headers: {HttpHeaders.authorizationHeader: "BASIC ${LoginInfo.getEncodedLogin()}"},
+    serverURL + functionURL,
+    headers: {
+      HttpHeaders.authorizationHeader: "BASIC ${LoginInfo.getEncodedLogin()}"
+    },
     body: parameters,
   );
   if (response.statusCode == 200) {
@@ -44,9 +46,4 @@ Future<DateTime> getDateOfInterest() async {
     throw Exception("server interaction failed");
   }
   return date;
-}
-
-// TODO: implement an actual connection to an actual database.
-class LocationData {
-  EmployeeLocation location = EmployeeLocation(location: Location.UNDEFINED);
 }

@@ -16,10 +16,11 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   Future<EmployeeLocation> _location = getLocation();
 
-  void _updateLocation(EmployeeLocation employeeLocation) {
-    setLocation(employeeLocation);
-    this._location = getLocation();
-    setState(() {});
+  Future<void> _updateLocation(EmployeeLocation employeeLocation) async {
+    if (await setLocation(employeeLocation)) {
+      this._location = getLocation();
+      setState(() {});
+    }
   }
 
   void _changeToOffice({OfficeLocation office, String additionalInfo}) {
@@ -37,7 +38,7 @@ class _HomePageState extends State<HomePage> {
 
   void _changeToAbsent({AbsentOptions absentType, String additionalInfo}) {
     EmployeeLocation location = EmployeeAbsent(
-      absentOptions: absentType,
+      absenceType: absentType,
       additionalInfo: additionalInfo,
     );
     _updateLocation(location);

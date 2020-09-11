@@ -74,7 +74,7 @@ class EmployeeLocation {
   EmployeeLocation({this.location = Location.UNDEFINED, this.working});
 
   factory EmployeeLocation.fromJSON(Map<String, dynamic> json) {
-    var location = json['location'];
+    var location = json['location'].toLowerCase();
     if (location == "office") {
       return new EmployeeAtOffice(
         //fixme: officeLocation is not a String
@@ -85,10 +85,17 @@ class EmployeeLocation {
     } else if (location == "absent") {
       return new EmployeeAbsent(
         //fixme: absentOptions is not a String
-          absentOptions: json['absenceType'],
+          absenceType: json['absenceType'],
           additionalInfo: json['additionalInfo']);
     }
       return new EmployeeLocation();
+  }
+  
+  Map<String, String> toMap() {
+    Map<String, String> map = new Map();
+    map.putIfAbsent("location", () => location.asString());
+    map.putIfAbsent("working", () => working ? "true": "false");
+    return map;
   }
 
   Widget display() {
@@ -106,6 +113,12 @@ class EmployeeAtHome extends EmployeeLocation {
       children: <Widget>[location.asText()],
     ));
   }
+
+  Map<String, String> toMap() {
+    var map = super.toMap();
+    return map;
+  }
+
 }
 
 class EmployeeAtOffice extends EmployeeLocation {
@@ -124,13 +137,24 @@ class EmployeeAtOffice extends EmployeeLocation {
       ],
     ));
   }
+
+  Map<String, String> toMap() {
+    var map = super.toMap();
+    if (officeLocation != null) {
+      map.putIfAbsent("office", () => officeLocation.asString());
+    }
+    if (additionalInfo != null) {
+      map.putIfAbsent("additionalInfo", () => additionalInfo);
+    }
+    return map;
+  }
 }
 
 class EmployeeAbsent extends EmployeeLocation {
-  AbsentOptions absentOptions;
+  AbsentOptions absenceType;
   String additionalInfo;
 
-  EmployeeAbsent({this.absentOptions, this.additionalInfo})
+  EmployeeAbsent({this.absenceType, this.additionalInfo})
       : super(location: Location.ABSENT, working: false);
 
   Widget display() {
@@ -142,6 +166,17 @@ class EmployeeAbsent extends EmployeeLocation {
         ],
       ),
     );
+  }
+
+  Map<String, String> toMap() {
+    var map = super.toMap();
+    if (absenceType != null) {
+      map.putIfAbsent("absenceType", () => absenceType.asString());
+    }
+    if (additionalInfo != null) {
+      map.putIfAbsent("additionalInfo", () => additionalInfo);
+    }
+    return map;
   }
 }
 
