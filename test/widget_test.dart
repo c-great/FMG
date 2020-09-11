@@ -10,6 +10,10 @@ import 'package:flutter_test/flutter_test.dart';
 
 import 'package:fmg_remote_work_tracker/main.dart';
 
+import 'dart:convert' as convert;
+
+import 'package:http/http.dart' as http;
+
 void main() {
   testWidgets('Counter increments smoke test', (WidgetTester tester) async {
     // Build our app and trigger a frame.
@@ -26,5 +30,10 @@ void main() {
     // Verify that our counter has incremented.
     expect(find.text('0'), findsNothing);
     expect(find.text('1'), findsOneWidget);
+  });
+
+  test('do something', () async {
+    var thing = await http.get('https://jsonplaceholder.typicode.com/albums/1');
+    print(thing.statusCode);
   });
 }

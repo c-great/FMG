@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:fmg_remote_work_tracker/database_interaction/basic_interaction.dart';
+import 'package:fmg_remote_work_tracker/server_interaction/basic_interaction.dart';
 import 'package:fmg_remote_work_tracker/models/employee_location.dart';
 import 'package:fmg_remote_work_tracker/components/buttons.dart';
 import 'location_display.dart';
