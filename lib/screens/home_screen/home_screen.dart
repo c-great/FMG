@@ -80,6 +80,12 @@ class _HomePageState extends State<HomePage> {
               child: Text("Absent Options"),
               callback: _changeToAbsent,
             ),
+            RaisedButton( // Will be changed to large button
+              child: Text("My Teams"),
+              onPressed: () {
+                Navigator.pushNamed(context, '/TeamScreen');
+              },
+            )
           ]),
           Spacer(),
           // TODO: Implement this

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:fmg_remote_work_tracker/theme/style.dart';
 import 'package:fmg_remote_work_tracker/screens/home_screen/home_screen.dart';
+import 'package:fmg_remote_work_tracker/screens/team_screen.dart';
 
 void main() {
   // ensure all dates are formatted for NZ.
@@ -16,6 +17,9 @@ class FmgApp extends StatelessWidget {
       title: 'FMG Remote Work Tracker App',
       theme: appTheme(),
       home: HomePage(title: 'FMG - Remote Work Tracker'),
+      routes: <String, WidgetBuilder> { // Routes are ways to navigate between screens.
+        '/TeamScreen': (BuildContext context) => TeamPage()
+      },
     );
   }
 }
