@@ -4,7 +4,7 @@ ThemeData appTheme() {
   return ThemeData(
     // made green because it is FMG's colour. But I haven't tried to match
     // the exact shade yet.
-    primarySwatch: Colors.green,
+    primarySwatch: MaterialColor(0xFFFFFFFF),
     visualDensity: VisualDensity.adaptivePlatformDensity,
   );
 }
