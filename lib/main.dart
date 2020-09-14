@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fmg_remote_work_tracker/screens/login_screen/login_screen.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:fmg_remote_work_tracker/theme/style.dart';
 import 'package:fmg_remote_work_tracker/screens/home_screen/home_screen.dart';
@@ -15,7 +16,7 @@ class FmgApp extends StatelessWidget {
     return MaterialApp(
       title: 'FMG Remote Work Tracker App',
       theme: appTheme(),
-      home: HomePage(title: 'FMG - Remote Work Tracker'),
+      home: LoginScreen(title: 'FMG - Remote Work Tracker'),
     );
   }
 }
