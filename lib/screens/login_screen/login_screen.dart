@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:fmg_remote_work_tracker/components/alert.dart';
+import 'package:fmg_remote_work_tracker/data/user_details.dart';
+import 'file:///C:/Users/nmcku/AndroidStudioProjects/fmg_remote_work_tracker/lib/data/login_info.dart';
+import 'package:fmg_remote_work_tracker/screens/home_screen/home_screen.dart';
+import 'package:fmg_remote_work_tracker/server_interaction/basic_interaction.dart';
 
 class LoginScreen extends StatefulWidget {
   LoginScreen({Key key, this.title}) : super(key: key);
@@ -12,32 +17,68 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  TextStyle style = TextStyle(fontFamily: 'Montserrat', fontSize: 20.0);
+  TextStyle style = TextStyle(fontSize: 20.0);
 
-  TextField getLoginTextField(String hintText) {
+  TextEditingController userNameController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
+
+  @override
+  void dispose() {
+    userNameController.dispose();
+    passwordController.dispose();
+    super.dispose();
+  }
+
+  TextField getLoginTextField(String hintText, bool shouldObscure,
+      TextEditingController controller, Iterable<String> autoFillHints) {
     return TextField(
-      obscureText: false,
+      autofillHints: autoFillHints,
+      obscureText: shouldObscure,
+      controller: controller,
       style: style,
       decoration: InputDecoration(
         contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
         hintText: hintText,
-        focusedBorder:
-        OutlineInputBorder(
+        focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(32.0),
-          borderSide: BorderSide(color: Theme.of(context).primaryColor, width: 3.0),),
-        enabledBorder:
-        OutlineInputBorder(
+          borderSide:
+              BorderSide(color: Theme.of(context).primaryColor, width: 3.0),
+        ),
+        enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(32.0),
-          borderSide: BorderSide(color: Theme.of(context).accentColor, width: 1.0),),
+          borderSide: BorderSide(
+              color: Theme.of(context).primaryColorLight, width: 1.0),
+        ),
       ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
+    final userNameField = getLoginTextField(
+        "User Name", false, userNameController, [AutofillHints.username]);
+    final passwordField = getLoginTextField(
+        "Password", true, passwordController, [AutofillHints.password]);
 
-    final userNameField = getLoginTextField("User Name");
-    final passwordField = getLoginTextField("Password");
+    void loginButtonAction() async {
+      LoginInfo.username = userNameController.text;
+      LoginInfo.password = passwordController.text;
+
+      try {
+        user = await getEmployee();
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) =>
+                  HomePage(title: 'FMG - Remote Work Tracker')),
+        );
+        // clear password once successful at logging in
+        passwordController.clear();
+      } catch (e) {
+        showAlert(context, "Login Failure", e.toString());
+      }
+    }
+
     final loginButton = Material(
       elevation: 5.0,
       borderRadius: BorderRadius.circular(30.0),
@@ -45,7 +86,7 @@ class _LoginScreenState extends State<LoginScreen> {
       child: MaterialButton(
         minWidth: MediaQuery.of(context).size.width,
         padding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-        onPressed: () {},
+        onPressed: loginButtonAction,
         child: Text("Login",
             textAlign: TextAlign.center,
             style: style.copyWith(
@@ -67,10 +108,20 @@ class _LoginScreenState extends State<LoginScreen> {
                   "assets/fmg-logo.png",
                   fit: BoxFit.contain,
                 ),
+                Text(
+                  "Remote Work Compliance App",
+                  style: Theme.of(context).primaryTextTheme.headline1,
+                ),
                 SizedBox(height: 45.0),
-                userNameField,
-                SizedBox(height: 25.0),
-                passwordField,
+                AutofillGroup(
+                  child: Column(
+                    children: [
+                      userNameField,
+                      SizedBox(height: 25.0),
+                      passwordField,
+                    ],
+                  ),
+                ),
                 SizedBox(
                   height: 35.0,
                 ),
