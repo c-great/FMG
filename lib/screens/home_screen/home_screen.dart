@@ -124,6 +124,12 @@ class _HomePageState extends State<HomePage> {
               child: Text("Absent Options"),
               callback: _changeToAbsent,
             ),
+            LargeButton( // TODO: Only show up if you're a manager?
+              child: Text("My Teams"),
+              callback: () {
+                Navigator.pushNamed(context, '/TeamScreen');
+              },
+            )
           ]),
           Spacer(),
           // TODO: Implement this
