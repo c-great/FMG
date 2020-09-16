@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:fmg_remote_work_tracker/screens/login_screen/login_screen.dart';
+import 'package:flutter/services.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:fmg_remote_work_tracker/theme/style.dart';
+import 'package:fmg_remote_work_tracker/screens/login_screen/login_screen.dart';
 import 'package:fmg_remote_work_tracker/screens/home_screen/home_screen.dart';
-import 'package:fmg_remote_work_tracker/screens/team_screen.dart';
+import 'package:fmg_remote_work_tracker/screens/team_screen/team_screen.dart';
 
 void main() {
   // ensure all dates are formatted for NZ.
@@ -11,17 +12,23 @@ void main() {
 }
 
 class FmgApp extends StatelessWidget {
-  // This widget is the root of your application.
+  // This widget is the root of the application.
   @override
   Widget build(BuildContext context) {
+    // it looks really hideous in landscape, so this stops that
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+    ]);
+
     return MaterialApp(
       title: 'FMG Remote Work Tracker App',
       theme: appTheme(),
-      home: HomePage(title: 'FMG - Remote Work Tracker'),
+      home: LoginScreen(),
       // Routes are ways to navigate between screens.
       routes: <String, WidgetBuilder> {
         '/TeamScreen': (BuildContext context) => TeamPage(),
-        '/HomeScreen': (BuildContext context) => HomePage(title: 'FMG - Remote Work Tracker')
+        '/HomeScreen': (BuildContext context) => HomePage(title: 'FMG - Remote Work Tracker'),
+        '/LoginScreen': (BuildContext context) => LoginScreen(),
       },
     );
   }

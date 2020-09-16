@@ -48,6 +48,14 @@ extension OfficeText on OfficeLocation {
 
 enum AbsentOptions { SICK_LEAVE, ANNUAL_LEAVE, OTHER }
 
+AbsentOptions getAbsenceType(String string) {
+  var lowerString = string.toLowerCase();
+  if (lowerString == "sick leave") return AbsentOptions.SICK_LEAVE;
+  else if (lowerString == "annual leave") return AbsentOptions.ANNUAL_LEAVE;
+  else if (lowerString == "other") return AbsentOptions.OTHER;
+  else return null;
+}
+
 extension AbsentText on AbsentOptions {
   // ignore: missing_return
   String asString() {
@@ -85,7 +93,7 @@ class EmployeeLocation {
     } else if (location == "absent") {
       return new EmployeeAbsent(
         //fixme: absentOptions is not a String
-          absenceType: json['absenceType'],
+          absenceType: getAbsenceType(json['absenceType']),
           additionalInfo: json['additionalInfo']);
     }
       return new EmployeeLocation();
@@ -162,6 +170,7 @@ class EmployeeAbsent extends EmployeeLocation {
       Column(
         children: <Widget>[
           location.asText(),
+          if (absenceType != null) absenceType.asText(),
           if (additionalInfo != null) Text(additionalInfo),
         ],
       ),

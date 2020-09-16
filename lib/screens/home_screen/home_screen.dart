@@ -19,6 +19,9 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   Future<EmployeeLocation> _location = getLocation();
 
+  EmployeeAtOffice selectedOfficeLocation;
+  EmployeeAbsent selectedAbsenceType;
+
   Future<void> _updateLocation(EmployeeLocation employeeLocation) async {
     if (await setLocation(employeeLocation)) {
       this._location = getLocation();
@@ -27,11 +30,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   void _changeToOffice({OfficeLocation office, String additionalInfo}) {
-    EmployeeLocation location = EmployeeAtOffice(
-      officeLocation: office,
-      additionalInfo: additionalInfo,
-    );
-    _updateLocation(location);
+    _updateLocation(selectedOfficeLocation);
   }
 
   void _changeToHome() {
@@ -39,12 +38,8 @@ class _HomePageState extends State<HomePage> {
     _updateLocation(location);
   }
 
-  void _changeToAbsent({AbsentOptions absentType, String additionalInfo}) {
-    EmployeeLocation location = EmployeeAbsent(
-      absenceType: absentType,
-      additionalInfo: additionalInfo,
-    );
-    _updateLocation(location);
+  void _changeToAbsent() {
+    _updateLocation(selectedAbsenceType);
   }
 
   Drawer _getDrawer(BuildContext context) {
@@ -92,13 +87,21 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+  Row _expandedRow({List<Widget> children}) {
+    var expandedChildren = children.map((e) => Expanded(
+          child: e,
+        ));
+    return Row(
+      children: expandedChildren.toList(),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
-        actions: <Widget>[
-        ],
+        actions: <Widget>[],
       ),
       endDrawer: _getDrawer(context),
       body: Column(
@@ -109,31 +112,48 @@ class _HomePageState extends State<HomePage> {
           ),
           Wrap(runSpacing: 10, children: <Widget>[
             selectLocationText(_location),
-            LargeButton(
-                child: Row(children: <Widget>[
-                  Expanded(child: OfficeDropDownButton()),
-                  Expanded(child: Text("Office")),
-                ]),
-                callback: _changeToOffice),
-            LargeButton(
-              child: Text("Home"),
-              callback: _changeToHome,
-            ),
+            _expandedRow(children: [
+              OfficeSelectButton(update: (newOfficeSelected) {
+                selectedOfficeLocation = newOfficeSelected;
+              },),
+              LargeButton(
+                  child: Expanded(child: Text("Office")),
+                  callback: _changeToOffice),
+            ]),
+            _expandedRow(children: [
+              SizedBox(),
+              LargeButton(
+                child: Text("Home"),
+                callback: _changeToHome,
+              ),
+            ]),
+            _expandedRow(children: [
+              AbsenceTypeSelectButton(update: (newAbsenceSelected) {
+                selectedAbsenceType = newAbsenceSelected;
+              } ,),
+              LargeButton(
+                child: Text("Absent"),
+                callback: _changeToAbsent,
+              ),
+            ]),
             // TODO: Implement this properly
-            LargeButton(
-              child: Text("Absent Options"),
-              callback: _changeToAbsent,
-            ),
-            LargeButton( // TODO: Only show up if you're a manager?
-              child: Text("My Teams"),
-              callback: () {
-                Navigator.pushNamed(context, '/TeamScreen');
-              },
-            )
           ]),
-          Spacer(),
           // TODO: Implement this
-          LargeButton(child: Text("Schedule Future Locations")),
+          Spacer(),
+          Wrap(runSpacing: 10, children: <Widget>[
+            _expandedRow(children: [
+              LargeButton(
+                // TODO: Only show up if you're a manager?
+                child: Text("My Teams"),
+                callback: () {
+                  Navigator.pushNamed(context, '/TeamScreen');
+                },
+              ),
+            ]),
+            _expandedRow(children: [
+              LargeButton(child: Text("Schedule Future Locations")),
+            ])
+          ]),
         ],
       ),
     );
