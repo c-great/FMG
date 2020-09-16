@@ -1,4 +1,4 @@
-# fmg_remote_work_tracker
+# fmg_remote_work_tracker - This branch is not being used. Will leave it be for now
 
 an app to help comply with government regulations regarding remote work
 
