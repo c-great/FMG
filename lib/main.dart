@@ -17,8 +17,10 @@ class FmgApp extends StatelessWidget {
       title: 'FMG Remote Work Tracker App',
       theme: appTheme(),
       home: HomePage(title: 'FMG - Remote Work Tracker'),
-      routes: <String, WidgetBuilder> { // Routes are ways to navigate between screens.
-        '/TeamScreen': (BuildContext context) => TeamPage()
+      // Routes are ways to navigate between screens.
+      routes: <String, WidgetBuilder> {
+        '/TeamScreen': (BuildContext context) => TeamPage(),
+        '/HomeScreen': (BuildContext context) => HomePage(title: 'FMG - Remote Work Tracker')
       },
     );
   }
