@@ -1,8 +1,9 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:fmg_remote_work_tracker/models/employee.dart';
 import 'package:fmg_remote_work_tracker/models/employee_location.dart';
-import 'package:fmg_remote_work_tracker/models/login_info.dart';
+import 'file:///C:/Users/nmcku/AndroidStudioProjects/fmg_remote_work_tracker/lib/data/login_info.dart';
 import 'package:http/http.dart' as http;
 
 var serverURL =
@@ -19,6 +20,11 @@ Future<bool> setLocation(EmployeeLocation location) async {
   return employeeLocationSetBoolJSON['success'];
 }
 
+Future<Employee> getEmployee() async {
+  var employeeJSON = await postRequest("getEmployee");
+  return Employee.fromJSON(employeeJSON);
+}
+
 Future<Map<String, dynamic>> postRequest(String functionURL,
     {Map<String, String> parameters}) async {
   Map<String, dynamic> output;
@@ -31,8 +37,10 @@ Future<Map<String, dynamic>> postRequest(String functionURL,
   );
   if (response.statusCode == 200) {
     output = json.decode(response.body);
+  } else if (response.statusCode == 401){
+    throw Exception("Invalid Username/Password");
   } else {
-    throw Exception("server interaction failed");
+    throw Exception("Server Interaction Failed");
   }
   return output;
 }

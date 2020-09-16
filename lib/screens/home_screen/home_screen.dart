@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:fmg_remote_work_tracker/data/login_info.dart';
+import 'package:fmg_remote_work_tracker/data/user_details.dart';
+import 'package:fmg_remote_work_tracker/screens/login_screen/login_screen.dart';
 import 'package:fmg_remote_work_tracker/server_interaction/basic_interaction.dart';
 import 'package:fmg_remote_work_tracker/models/employee_location.dart';
 import 'package:fmg_remote_work_tracker/components/buttons.dart';
@@ -44,19 +47,60 @@ class _HomePageState extends State<HomePage> {
     _updateLocation(location);
   }
 
+  Drawer _getDrawer(BuildContext context) {
+    return Drawer(
+      child: ListView(
+        padding: EdgeInsets.zero,
+        children: <Widget>[
+          DrawerHeader(
+            decoration: BoxDecoration(
+              color: Theme.of(context).primaryColor,
+            ),
+            child: Text(
+              "Signed in as:\n"
+              "${user.lastName}, ${user.firstName}",
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 24,
+              ),
+            ),
+          ),
+          ListTile(
+            leading: Icon(Icons.message),
+            title: Text('Messages'),
+          ),
+          ListTile(
+            leading: Icon(Icons.account_circle),
+            title: Text('Profile'),
+          ),
+          Divider(),
+          ListTile(
+            leading: Icon(Icons.power_settings_new),
+            title: Text('Sign Out'),
+            onTap: () {
+              LoginInfo.clear();
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) =>
+                        LoginScreen(title: 'FMG - Remote Work Tracker')),
+              );
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
         actions: <Widget>[
-          IconButton(
-            icon: Icon(Icons.settings),
-            // TODO: make button open an settings menu
-            onPressed: null,
-          )
         ],
       ),
+      endDrawer: _getDrawer(context),
       body: Column(
         children: [
           RecordedLocationDisplay(
