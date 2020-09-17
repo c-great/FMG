@@ -12,7 +12,7 @@ class LargeButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-        height: 50,
+        height: 70,
         child: RaisedButton(
           onPressed: this.callback,
           child: this.child,
@@ -20,60 +20,22 @@ class LargeButton extends StatelessWidget {
   }
 }
 
-class OfficeDropDownButton extends StatefulWidget {
-  OfficeDropDownButton({Key key}) : super(key: key);
-
-  @override
-  _OfficeDropDownButtonState createState() => _OfficeDropDownButtonState();
-}
-
-class _OfficeDropDownButtonState extends State<OfficeDropDownButton> {
-  OfficeLocation dropdownValue = OfficeLocation.WELLINGTON;
-
-  @override
-  Widget build(BuildContext context) {
-    return DropdownButton<OfficeLocation>(
-      value: dropdownValue,
-      icon: Icon(Icons.arrow_downward),
-      iconSize: 24,
-      elevation: 16,
-      style: TextStyle(color: Colors.deepPurple),
-      underline: Container(
-        height: 2,
-        color: Colors.deepPurpleAccent,
-      ),
-      onChanged: (OfficeLocation newValue) {
-        setState(() {
-          dropdownValue = newValue;
-        });
-      },
-      items: OfficeLocation.values
-          .map<DropdownMenuItem<OfficeLocation>>((OfficeLocation value) {
-        return DropdownMenuItem<OfficeLocation>(
-          value: value,
-          child: Text(value.asString()),
-        );
-      }).toList(),
-    );
-  }
-}
-
 class OfficeSelectButton extends StatefulWidget {
   final Function update;
+  final EmployeeAtOffice starting;
 
-  OfficeSelectButton({Key key, this.update}) : super(key: key);
+  OfficeSelectButton({Key key, this.update, this.starting}) : super(key: key);
 
   @override
-  _OfficeSelectButtonState createState() => _OfficeSelectButtonState(update: update);
+  _OfficeSelectButtonState createState() =>
+      _OfficeSelectButtonState(update: update, location: starting);
 }
 
 class _OfficeSelectButtonState extends State<OfficeSelectButton> {
   final Function update;
+  EmployeeAtOffice location;
 
-  _OfficeSelectButtonState({this.update});
-
-  EmployeeAtOffice location =
-      EmployeeAtOffice(officeLocation: OfficeLocation.WELLINGTON);
+  _OfficeSelectButtonState({this.update, this.location});
 
   _navigateToOfficeSelection(BuildContext context) async {
     final result = await Navigator.push(
@@ -90,38 +52,26 @@ class _OfficeSelectButtonState extends State<OfficeSelectButton> {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-        height: 50,
-        child: RaisedButton(
-          child: Row(children: [
-            //fixme: something slightly wrong with this, gives a warning I think
-            Expanded(child: Center(child: Text(location.officeLocation.asString())),),
-            Icon(Icons.menu)
-          ],),
-          color: Theme.of(context).primaryColorLight,
-          onPressed: () {
-            _navigateToOfficeSelection(context);
-          },
-        ));
+    return _makeSelectScreenButton(context, location.officeLocation, _navigateToOfficeSelection);
   }
 }
 
 class AbsenceTypeSelectButton extends StatefulWidget {
   final Function update;
+  final EmployeeAbsent starting;
 
-  AbsenceTypeSelectButton({Key key, this.update}) : super(key: key);
+  AbsenceTypeSelectButton({Key key, this.update, this.starting}) : super(key: key);
 
   @override
-  _AbsenceTypeSelectButtonState createState() => _AbsenceTypeSelectButtonState(update: update);
+  _AbsenceTypeSelectButtonState createState() =>
+      _AbsenceTypeSelectButtonState(update: update, location: starting);
 }
 
 class _AbsenceTypeSelectButtonState extends State<AbsenceTypeSelectButton> {
   final Function update;
+  EmployeeAbsent location;
 
-  _AbsenceTypeSelectButtonState({this.update});
-
-  EmployeeAbsent location =
-  EmployeeAbsent(absenceType: AbsentOptions.ANNUAL_LEAVE);
+  _AbsenceTypeSelectButtonState({this.update, this.location});
 
   _navigateToOfficeSelection(BuildContext context) async {
     final result = await Navigator.push(
@@ -139,18 +89,21 @@ class _AbsenceTypeSelectButtonState extends State<AbsenceTypeSelectButton> {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-        height: 50,
-        child: RaisedButton(
-          child: Row(children: [
-            //fixme: something slightly wrong with this, gives a warning I think
-            Expanded(child: Center(child: Text(location.absenceType.asString())),),
-            Icon(Icons.menu)
-          ],),
-          color: Theme.of(context).primaryColorLight,
-          onPressed: () {
-            _navigateToOfficeSelection(context);
-          },
-        ));
+    return _makeSelectScreenButton(context, location.absenceType.asString(), _navigateToOfficeSelection);
   }
+}
+
+Widget _makeSelectScreenButton(BuildContext context, String label, Function onPress) {
+  return SizedBox(
+      height: 70,
+      child: RaisedButton(
+        child: Row(children: [
+          Expanded(child: Center(child: Text(label)),),
+          Icon(Icons.menu)
+        ],),
+        color: Theme.of(context).primaryColorLight,
+        onPressed: () {
+          onPress(context);
+        },
+      ));
 }

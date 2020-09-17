@@ -25,26 +25,26 @@ extension LocationText on Location {
   }
 }
 
-enum OfficeLocation { WELLINGTON, PALMERSTON_NORTH, OTHER }
-
-extension OfficeText on OfficeLocation {
-  // ignore: missing_return
-  String asString() {
-    switch(this) {
-      case OfficeLocation.WELLINGTON: return "Wellington";
-      break;
-
-      case OfficeLocation.PALMERSTON_NORTH: return "Palmerston North";
-      break;
-
-      case OfficeLocation.OTHER: return "Other";
-    }
-  }
-
-  Text asText() {
-    return Text(this.asString(), style: subTitle(),);
-  }
-}
+// enum OfficeLocation { WELLINGTON, PALMERSTON_NORTH, OTHER }
+//
+// extension OfficeText on OfficeLocation {
+//   // ignore: missing_return
+//   String asString() {
+//     switch(this) {
+//       case OfficeLocation.WELLINGTON: return "Wellington";
+//       break;
+//
+//       case OfficeLocation.PALMERSTON_NORTH: return "Palmerston North";
+//       break;
+//
+//       case OfficeLocation.OTHER: return "Other";
+//     }
+//   }
+//
+//   Text asText() {
+//     return Text(this.asString(), style: subTitle(),);
+//   }
+// }
 
 enum AbsentOptions { SICK_LEAVE, ANNUAL_LEAVE, OTHER }
 
@@ -130,7 +130,7 @@ class EmployeeAtHome extends EmployeeLocation {
 }
 
 class EmployeeAtOffice extends EmployeeLocation {
-  OfficeLocation officeLocation;
+  String officeLocation;
   String additionalInfo;
 
   EmployeeAtOffice({this.officeLocation, this.additionalInfo})
@@ -140,7 +140,7 @@ class EmployeeAtOffice extends EmployeeLocation {
     return displayBox(Column(
       children: <Widget>[
         location.asText(),
-        if (officeLocation != null) officeLocation.asText(),
+        if (officeLocation != null) Text(officeLocation, style: subTitle(),),
         if (additionalInfo != null) Text(additionalInfo),
       ],
     ));
@@ -149,7 +149,7 @@ class EmployeeAtOffice extends EmployeeLocation {
   Map<String, String> toMap() {
     var map = super.toMap();
     if (officeLocation != null) {
-      map.putIfAbsent("office", () => officeLocation.asString());
+      map.putIfAbsent("office", () => officeLocation);
     }
     if (additionalInfo != null) {
       map.putIfAbsent("additionalInfo", () => additionalInfo);
