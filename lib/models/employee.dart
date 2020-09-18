@@ -5,6 +5,7 @@ class Employee {
   String loginName;
   bool manager;
   String managerID;
+  bool admin;
 
   Employee();
 
@@ -16,6 +17,7 @@ class Employee {
     employee.loginName = json['loginName'];
     employee.manager = json['manager'];
     employee.managerID = json['managerID'];
+    employee.manager = json['admin'];
 
     return employee;
   }
