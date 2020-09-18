@@ -3,7 +3,7 @@ import 'dart:io';
 
 import 'package:fmg_remote_work_tracker/models/employee.dart';
 import 'package:fmg_remote_work_tracker/models/employee_location.dart';
-import 'file:///C:/Users/nmcku/AndroidStudioProjects/fmg_remote_work_tracker/lib/data/login_info.dart';
+import 'package:fmg_remote_work_tracker/data/login_info.dart';
 import 'package:http/http.dart' as http;
 
 var serverURL =
