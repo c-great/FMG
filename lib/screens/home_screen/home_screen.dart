@@ -92,8 +92,7 @@ class _HomePageState extends State<HomePage> {
               final result = await Navigator.push(
                 context,
                 // Create the SelectionScreen in the next step.
-                MaterialPageRoute(
-                    builder: (context) => OfficeListScreen()),
+                MaterialPageRoute(builder: (context) => OfficeListScreen()),
               );
               if (result != null) {
                 setDefaultOffice(result);
@@ -143,12 +142,16 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Row _expandedRow({List<Widget> children}) {
+  Widget _expandedRow({List<Widget> children}) {
     var expandedChildren = children.map((e) => Expanded(
           child: e,
         ));
-    return Row(
-      children: expandedChildren.toList(),
+    return Flexible(
+      fit: FlexFit.tight,
+      flex: 1,
+      child: Row(
+        children: expandedChildren.toList(),
+      ),
     );
   }
 
@@ -166,65 +169,79 @@ class _HomePageState extends State<HomePage> {
             location: _location,
             date: getDateOfInterest(),
           ),
-          Wrap(runSpacing: 10, children: <Widget>[
-            selectLocationText(_location),
-            _expandedRow(children: [
-              OfficeSelectButton(
-                starting: selectedOfficeLocation,
-                update: (newOfficeSelected) {
-                  selectedOfficeLocation = newOfficeSelected;
-                },
-              ),
-              LargeButton(
-                  child: Row(children: [
-                    Expanded(child: Center(child: Text("Office")),),
-                    Icon(Icons.location_city),
-                  ]),
-                  callback: _changeToOffice),
-            ]),
-            _expandedRow(children: [
-              SizedBox(),
-              LargeButton(
+          selectLocationText(_location),
+          _expandedRow(children: [
+            OfficeSelectButton(
+              starting: selectedOfficeLocation,
+              update: (newOfficeSelected) {
+                selectedOfficeLocation = newOfficeSelected;
+              },
+            ),
+            LargeButton(
                 child: Row(children: [
-                  Expanded(child: Center(child: Text("Home")),),
-                  Icon(Icons.home),
+                  Expanded(
+                    child: Center(child: Text("Office")),
+                  ),
+                  Icon(Icons.location_city),
                 ]),
-                callback: _changeToHome,
-              ),
-            ]),
-            _expandedRow(children: [
-              AbsenceTypeSelectButton(
-                starting: selectedAbsenceType,
-                update: (newAbsenceSelected) {
-                  selectedAbsenceType = newAbsenceSelected;
-                },
-              ),
-              LargeButton(
-                child: Row(children: [
-                  Expanded(child: Center(child: Text("Absent")),),
-                  Icon(Icons.beach_access),
-                ]),
-                callback: _changeToAbsent,
-              ),
-            ]),
-            // TODO: Implement this properly
+                callback: _changeToOffice),
           ]),
-          // TODO: Implement this
-          Spacer(),
-          Wrap(runSpacing: 10, children: <Widget>[
-            _expandedRow(children: [
-              LargeButton(
-                // TODO: Only show up if you're a manager?
-                child: Text("My Teams"),
-                callback: () {
-                  Navigator.pushNamed(context, '/TeamScreen');
-                },
-              ),
-            ]),
-            _expandedRow(children: [
-              LargeButton(child: Text("Schedule Future Locations")),
-            ])
+          _expandedRow(children: [
+            SizedBox(),
+            LargeButton(
+              child: Row(children: [
+                Expanded(
+                  child: Center(child: Text("Home")),
+                ),
+                Icon(Icons.home),
+              ]),
+              callback: _changeToHome,
+            ),
           ]),
+          _expandedRow(children: [
+            AbsenceTypeSelectButton(
+              starting: selectedAbsenceType,
+              update: (newAbsenceSelected) {
+                selectedAbsenceType = newAbsenceSelected;
+              },
+            ),
+            LargeButton(
+              child: Row(children: [
+                Expanded(
+                  child: Center(child: Text("Absent")),
+                ),
+                Icon(Icons.beach_access),
+              ]),
+              callback: _changeToAbsent,
+            ),
+          ]),
+          Spacer(
+            flex: 1,
+          ),
+          _expandedRow(children: [
+            LargeButton(
+              // TODO: Only show up if you're a manager?
+              child: Row(children: [
+                Expanded(
+                  child: Center(child: Text("My Team")),
+                ),
+                Icon(Icons.people),
+              ]),
+              callback: () {
+                Navigator.pushNamed(context, '/TeamScreen');
+              },
+            ),
+          ]),
+          _expandedRow(children: [
+            LargeButton(
+              child: Row(children: [
+                Expanded(
+                  child: Center(child: Text("Schedule Future Locations")),
+                ),
+                Icon(Icons.date_range),
+              ]),
+            ),
+          ])
         ],
       ),
     );

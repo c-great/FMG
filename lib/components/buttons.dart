@@ -11,12 +11,10 @@ class LargeButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-        height: 70,
-        child: RaisedButton(
-          onPressed: this.callback,
-          child: this.child,
-        ));
+    return RaisedButton(
+      onPressed: this.callback,
+      child: this.child,
+    );
   }
 }
 
@@ -52,7 +50,8 @@ class _OfficeSelectButtonState extends State<OfficeSelectButton> {
 
   @override
   Widget build(BuildContext context) {
-    return _makeSelectScreenButton(context, location.officeLocation, _navigateToOfficeSelection);
+    return _makeSelectScreenButton(
+        context, location.officeLocation, _navigateToOfficeSelection);
   }
 }
 
@@ -60,7 +59,8 @@ class AbsenceTypeSelectButton extends StatefulWidget {
   final Function update;
   final EmployeeAbsent starting;
 
-  AbsenceTypeSelectButton({Key key, this.update, this.starting}) : super(key: key);
+  AbsenceTypeSelectButton({Key key, this.update, this.starting})
+      : super(key: key);
 
   @override
   _AbsenceTypeSelectButtonState createState() =>
@@ -89,21 +89,25 @@ class _AbsenceTypeSelectButtonState extends State<AbsenceTypeSelectButton> {
 
   @override
   Widget build(BuildContext context) {
-    return _makeSelectScreenButton(context, location.absenceType.asString(), _navigateToOfficeSelection);
+    return _makeSelectScreenButton(
+        context, location.absenceType.asString(), _navigateToOfficeSelection);
   }
 }
 
-Widget _makeSelectScreenButton(BuildContext context, String label, Function onPress) {
-  return SizedBox(
-      height: 70,
-      child: RaisedButton(
-        child: Row(children: [
-          Expanded(child: Center(child: Text(label)),),
-          Icon(Icons.menu)
-        ],),
-        color: Theme.of(context).primaryColorLight,
-        onPressed: () {
-          onPress(context);
-        },
-      ));
+Widget _makeSelectScreenButton(
+    BuildContext context, String label, Function onPress) {
+  return RaisedButton(
+    child: Row(
+      children: [
+        Expanded(
+          child: Center(child: Text(label)),
+        ),
+        Icon(Icons.menu)
+      ],
+    ),
+    color: Theme.of(context).primaryColorLight,
+    onPressed: () {
+      onPress(context);
+    },
+  );
 }
