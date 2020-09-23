@@ -10,6 +10,8 @@ import 'package:fmg_remote_work_tracker/models/employee_location.dart';
 import 'package:fmg_remote_work_tracker/components/buttons.dart';
 import 'location_display.dart';
 
+
+
 class HomePage extends StatefulWidget {
   HomePage({Key key, this.title}) : super(key: key);
 
@@ -178,14 +180,16 @@ class _HomePageState extends State<HomePage> {
               },
             ),
             LargeButton(
+
                 child: Row(children: [
                   Expanded(
                     child: Center(child: Text("Office")),
                   ),
+
                   Icon(Icons.location_city),
-                ]),
-                callback: _changeToOffice),
+                ]), callback: _changeToOffice),
           ]),
+
           _expandedRow(children: [
             SizedBox(),
             LargeButton(
@@ -240,6 +244,9 @@ class _HomePageState extends State<HomePage> {
                 ),
                 Icon(Icons.date_range),
               ]),
+              callback:(){
+                Navigator.pushNamed(context, '/CalendarScreen');
+              }
             ),
           ])
         ],
