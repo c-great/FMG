@@ -9,8 +9,8 @@ import 'package:fmg_remote_work_tracker/models/employee_location.dart';
 
 
 class CalendarScreen extends StatefulWidget {
-  CalendarScreen({Key key, this.title}) : super(key: key);
-  final String title;
+  CalendarScreen({Key key}) : super(key: key);
+
   Future<EmployeeAtOffice> defaultOfficeFuture;
 
   @override
@@ -36,63 +36,37 @@ class CalendarScreen extends StatefulWidget {
     @override
     Widget build(BuildContext context) {
       return Scaffold(
-          body: SfCalendar(
-            view: _calendarView,
-            firstDayOfWeek: 1,
-            dataSource: _getDataSource(),
-            onTap:
-          )
+
+        body: Container(
+          child: SfCalendar(
+              view: _calendarView,
+              firstDayOfWeek: 1,
+              dataSource: _getDataSource(),
+              onTap: onCalendarTapped
+
+          ),
+        ),
       );
     }
 
-    Widget _getAppointmentEditor(BuildContext context, defaultOffice) {
-      return Container(
-          child: ListView(
-              padding: const EdgeInsets.all(0),
-              children: <Widget>[
-                ListTile(
-                  contentPadding: const EdgeInsets.fromLTRB(5, 0, 5, 5),
-                  leading: Icon(Icons.location_city),
-                  title: Text("Choose your Office Location"),
-                  subtitle: Text(defaultOffice.officeLocation),
-                  onTap: () async {
-                    final result = await Navigator.push(
-                      context,
-                      // Create the SelectionScreen in the next step.
-                      MaterialPageRoute(
-                          builder: (context) => OfficeListScreen()),
-                    );
-                    if (result != null) {
-                      setDefaultOffice(result);
-                      setState(() {
-                        defaultOfficeFuture = Future.value(result);
-                        defaultOffice = result;
-                      });
-                    }
-                  },
 
 
-                )
-              ]
-          )
-      );
+    void onCalendarTapped(CalendarTapDetails calendarTapDetails) {
+      if (calendarTapDetails.targetElement == CalendarElement.calendarCell) {
+        setState(() {
+          final result = Navigator.push(context, MaterialPageRoute(
+              builder: (context) => OfficeListScreen()),);
+        }
+        );
+      }
     }
-  }
 
-  void onCalendarTapped (CalendarTapDetails calendarTapDetails){
-    if (calendarTapDetails.targetElement != CalendarElement.calendarCell &&
-        calendarTapDetails.targetElement != CalendarElement.appointment) {
-      return;
   }
-    MaterialPageRoute(builder: (BuildContext context) => AppointmentEditor()),
-    );
-  }
-
-
 
 DataSource _getDataSource() {
  final List <Appointment> OfficeLocation = <Appointment>[];
- OfficeLocation.add(Appointment(getDefaultOffice().toString()));
+
+
     }
 
 
