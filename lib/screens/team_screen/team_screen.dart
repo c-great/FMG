@@ -31,7 +31,7 @@ class Team { //extends EmployeeInfo
 //      print("NotEqual");
     }
   }
-
+  // So that teamList addition in the constructor actually get added
   void callConstructor() {
 //    matchTeam();
   }
@@ -42,6 +42,7 @@ Team carl = new Team("Carl","Working","Remotely","Team1");
 Team tim = new Team("Tim","Other","NA","Team2");
 Team kim = new Team("Kim","Absent","NA","Team2");
 
+// Must be called from a widget build/elsewhere so Team class members are added to lists.
 void initTeam() {
   jim.callConstructor();
   carl.callConstructor();
@@ -49,20 +50,21 @@ void initTeam() {
   kim.callConstructor();
 }
 
-// try put team page here
-class EditState extends StatefulWidget {
+// Team Page state
+class TeamPage extends StatefulWidget {
   @override
   EditText createState() => EditText();
 }
-class EditText extends State<EditState> {
+class EditText extends State<TeamPage> {
   bool _isEditingText = false;
   TextEditingController _editingController;
-  String initialText = "Initial Text";
-
+//  String initialText = "Initial Text";
+  // Used for when changing values within the team lists
+  int nameNumber = 0;
   @override
   void initState() {
     super.initState();
-    _editingController = TextEditingController(text: initialText);
+    _editingController = TextEditingController(text: "InitialText");
   }
   @override
   void dispose() {
@@ -72,11 +74,11 @@ class EditText extends State<EditState> {
 
   @override
   Widget build(BuildContext context) {
-
+  initTeam();
     return Scaffold(
-      appBar: AppBar(
-        title: Text("'Editable Text"),
-      ),
+//      appBar: AppBar(
+//        title: Text("Editable Text"),
+//      ),
       body: Center(
         child: _editTitleTextField(),
       ),
@@ -84,12 +86,16 @@ class EditText extends State<EditState> {
   }
 
   Widget _editTitleTextField() {
+//    int counter = 0;
     if (_isEditingText)
       return Center(
         child: TextField(
+//          onChanged: (test) => {"newText"},
           onSubmitted: (newValue){
+//            initialText = teamName[nameNumber];
+            teamLocation[nameNumber] = newValue;
             setState(() {
-              initialText = newValue;
+//              initialText = newValue; // Sets value to whatever is typed
               _isEditingText =false;
             });
           },
@@ -97,60 +103,44 @@ class EditText extends State<EditState> {
           controller: _editingController,
         ),
       );
-    return InkWell(
-        onTap: () {
-      setState(() {
-        _isEditingText = true;
-      });
-    },
-      child: Text(
-      initialText,
-      style: TextStyle(
-      color: Colors.black,
-      fontSize: 18.0,
-      ),
-    ));
-  }
-
-}
-
-class TeamPage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    initTeam();
-    print(teamName);
-    print(teamAttendance);
-    print(teamLocation);
-    print(teamNumber);
-
     return Scaffold(
-        appBar: AppBar(
-          title: Text("My Teams"),
-        ),
-        body: Column ( //GridView.count
-          // Generate widgets that display a team member name, attendance and location.
-          children: List.generate(teamName.length, (index) {
-            var name = teamName[index];
-            var attendance = teamAttendance[index];
-            var location = teamLocation[index];
-            var number = teamNumber[index];
-            return SizedBox(
-              width: double.infinity,
-              height: 50,
-              child: Wrap(runSpacing: 10, children: <Widget>[
-                RaisedButton(
-                  child: Row(children: <Widget>[
-                    Expanded(child: Text('$name , $attendance , $location'))
-                      ]),
-                  onPressed: () { print('$name'); },
+      appBar: AppBar(
+        title: Text("My Teams"),
+      ),
+      body: Column ( //GridView.count
+        // Generate widgets that display a team member name, attendance and location.
+        children: List.generate(teamName.length, (index) {
+          var name = teamName[index];
+          var attendance = teamAttendance[index];
+          var location = teamLocation[index];
+          var number = teamNumber[index];
+          return SizedBox(
+            width: double.infinity,
+            height: 50,
+            child: Wrap(runSpacing: 10, children: <Widget>[
+              RaisedButton(
+                child: Row(children: <Widget>[
+                  Expanded(child: Text('$name , $attendance , $location'))
+                ]),
+                onPressed: () {
+                  // Update nameNumber so we know which person to update
+                  nameNumber = index;
+                  // Set the text value that appears to be equal to the current name.
+                  _editingController.text = teamLocation[nameNumber]; // THIS WAS SOMETIMES CAUSING ERRORS. IDK WHY.
+                  setState(() {
+                    _isEditingText = true;
+                  });
+                  print(teamName[index]+" "+teamAttendance[index]+" "+teamLocation[index]+" counter is at: "+nameNumber.toString());
+                  },
               ),
             ]),
-            );
-          }),
-        ),
-      );
+          );
+        }),
+      ),
+    );
   }
 }
+
 
 
 
