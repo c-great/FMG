@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:fmg_remote_work_tracker/models/employee_location.dart';
 import 'dart:core';
 
+import 'package:fmg_remote_work_tracker/screens/list_screen/team_edit_options_list.dart';
+// fixme: Clean up all the useless comments when done.
 // Screen for displaying team information.
 
 // Init empty lists to use for tracking and display information
@@ -10,6 +12,7 @@ List<String> teamName =  [];
 List<String> teamAttendance =  [];
 List<String> teamLocation =  [];
 List<String> teamNumber =  [];
+String chosenEdit;
 
 class Team { //extends EmployeeInfo
   String name, attendance, location, team;
@@ -49,6 +52,16 @@ void initTeam() {
   tim.callConstructor();
   kim.callConstructor();
 }
+// Purpose is to return the value the user wants to edit. e.g. Attendance or Location
+_navigateTeamEditOptionsScreen(BuildContext context) async {
+  final result = await Navigator.push(
+    context,
+      MaterialPageRoute(builder: (context) => TeamEditOptionsScreen()),
+  );
+  chosenEdit = ('$result');
+  print(chosenEdit);
+
+}
 
 // Team Page state
 class TeamPage extends StatefulWidget {
@@ -56,9 +69,9 @@ class TeamPage extends StatefulWidget {
   EditText createState() => EditText();
 }
 class EditText extends State<TeamPage> {
-  bool _isEditingText = false;
+  bool _isEditingLocation = false;
+  bool _isEditingAttendance = false;
   TextEditingController _editingController;
-//  String initialText = "Initial Text";
   // Used for when changing values within the team lists
   int nameNumber = 0;
   @override
@@ -86,17 +99,26 @@ class EditText extends State<TeamPage> {
   }
 
   Widget _editTitleTextField() {
-//    int counter = 0;
-    if (_isEditingText)
+    if (_isEditingLocation)
       return Center(
         child: TextField(
-//          onChanged: (test) => {"newText"},
           onSubmitted: (newValue){
-//            initialText = teamName[nameNumber];
             teamLocation[nameNumber] = newValue;
             setState(() {
-//              initialText = newValue; // Sets value to whatever is typed
-              _isEditingText =false;
+              _isEditingLocation =false;
+            });
+          },
+          autofocus: true,
+          controller: _editingController,
+        ),
+      );
+    if (_isEditingAttendance)
+      return Center(
+        child: TextField(
+          onSubmitted: (newValue){
+            teamAttendance[nameNumber] = newValue;
+            setState(() {
+              _isEditingAttendance =false;
             });
           },
           autofocus: true,
@@ -122,15 +144,26 @@ class EditText extends State<TeamPage> {
                 child: Row(children: <Widget>[
                   Expanded(child: Text('$name , $attendance , $location'))
                 ]),
-                onPressed: () {
+                onPressed: () async {
                   // Update nameNumber so we know which person to update
                   nameNumber = index;
-                  // Set the text value that appears to be equal to the current name.
-                  _editingController.text = teamLocation[nameNumber]; // THIS WAS SOMETIMES CAUSING ERRORS. IDK WHY.
-                  setState(() {
-                    _isEditingText = true;
-                  });
-                  print(teamName[index]+" "+teamAttendance[index]+" "+teamLocation[index]+" counter is at: "+nameNumber.toString());
+                  // Path to attendance/location options, the choice is returned as result.
+                  final result = await Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => TeamEditOptionsScreen()),
+                  );
+                    if (result == "Attendance") {
+                      // Set the shown text to what it is currently. Then start editing.
+                      _editingController.text = teamAttendance[nameNumber];
+                      setState(() {
+                        _isEditingAttendance = true;
+                      });
+                    } else if (result == "Location") {
+                      _editingController.text = teamLocation[nameNumber];
+                      setState(() {
+                        _isEditingLocation = true;
+                      });
+                    }
                   },
               ),
             ]),
