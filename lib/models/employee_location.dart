@@ -85,14 +85,12 @@ class EmployeeLocation {
     var location = json['location'].toLowerCase();
     if (location == "office") {
       return new EmployeeAtOffice(
-        //fixme: officeLocation is not a String
           officeLocation: json['office'],
           additionalInfo: json['additionalInfo']);
     } else if (location == "home") {
       return new EmployeeAtHome();
     } else if (location == "absent") {
       return new EmployeeAbsent(
-        //fixme: absentOptions is not a String
           absenceType: getAbsenceType(json['absenceType']),
           additionalInfo: json['additionalInfo']);
     }
