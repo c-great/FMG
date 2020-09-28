@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:fmg_remote_work_tracker/main.dart';
+import 'package:fmg_remote_work_tracker/server_interaction/basic_interaction.dart';
 
 import 'dart:convert' as convert;
 
@@ -32,8 +33,8 @@ void main() {
     expect(find.text('1'), findsOneWidget);
   });
 
-  test('do something', () async {
-    var thing = await http.get('https://jsonplaceholder.typicode.com/albums/1');
-    print(thing.statusCode);
+  test('test get date', () async {
+    DateTime date = await getDateOfInterest();
+    print(date);
   });
 }
