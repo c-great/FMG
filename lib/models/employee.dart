@@ -17,7 +17,7 @@ class Employee {
     employee.loginName = json['loginName'];
     employee.manager = json['manager'];
     employee.managerID = json['managerID'];
-    employee.manager = json['admin'];
+    employee.admin = json['admin'];
 
     return employee;
   }

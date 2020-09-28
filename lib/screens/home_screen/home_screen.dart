@@ -157,6 +157,27 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+  Widget _getTeamScreenButton() {
+    if (user.manager) {
+      return _expandedRow(children: [
+        LargeButton(
+          child: Row(children: [
+            Expanded(
+              child: Center(child: Text("My Team")),
+            ),
+            Icon(Icons.people),
+          ]),
+          callback: () {
+            Navigator.pushNamed(context, '/TeamScreen');
+          },
+        ),
+      ]);
+    }
+    else {
+      return SizedBox();
+    }
+  }
+
   Scaffold _getMainScaffold(BuildContext context,
       EmployeeAtOffice defaultOffice, EmployeeAbsent defaultAbsence) {
     return Scaffold(
@@ -222,20 +243,7 @@ class _HomePageState extends State<HomePage> {
           Spacer(
             flex: 1,
           ),
-          _expandedRow(children: [
-            LargeButton(
-              // TODO: Only show up if you're a manager?
-              child: Row(children: [
-                Expanded(
-                  child: Center(child: Text("My Team")),
-                ),
-                Icon(Icons.people),
-              ]),
-              callback: () {
-                Navigator.pushNamed(context, '/TeamScreen');
-              },
-            ),
-          ]),
+          _getTeamScreenButton(),
           _expandedRow(children: [
             LargeButton(
               child: Row(children: [
