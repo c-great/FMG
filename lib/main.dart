@@ -6,6 +6,7 @@ import 'package:fmg_remote_work_tracker/screens/login_screen/login_screen.dart';
 import 'package:fmg_remote_work_tracker/screens/home_screen/home_screen.dart';
 import 'package:fmg_remote_work_tracker/screens/team_screen/team_screen.dart';
 import 'package:fmg_remote_work_tracker/screens/calendar_screen/calendar_screen.dart';
+import 'package:fmg_remote_work_tracker/server_interaction/push_notifications.dart';
 
 void main() {
   // ensure all dates are formatted for NZ.
@@ -21,16 +22,19 @@ class FmgApp extends StatelessWidget {
       DeviceOrientation.portraitUp,
     ]);
 
+    PushNotificationsManager().init();
+
     return MaterialApp(
       title: 'FMG Remote Work Tracker App',
       theme: appTheme(),
       home: LoginScreen(),
       // Routes are ways to navigate between screens.
-      routes: <String, WidgetBuilder> {
+      routes: <String, WidgetBuilder>{
         '/TeamScreen': (BuildContext context) => TeamPage(),
-        '/HomeScreen': (BuildContext context) => HomePage(title: 'FMG - Remote Work Tracker'),
+        '/HomeScreen': (BuildContext context) =>
+            HomePage(title: 'FMG - Remote Work Tracker'),
         '/LoginScreen': (BuildContext context) => LoginScreen(),
-        '/CalendarScreen':(BuildContext context) => CalendarScreen()
+        '/CalendarScreen': (BuildContext context) => CalendarScreen()
       },
     );
   }

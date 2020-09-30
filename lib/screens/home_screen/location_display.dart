@@ -47,9 +47,12 @@ class RecordedLocationDisplay extends StatelessWidget {
 
 String relativeDay(DateTime date) {
   var todayDate = new DateTime.now();
-  if (todayDate.year == date.year && todayDate.month == date.month) {
-    if (todayDate.day == date.day) return "TODAY";
-    else if (todayDate.day + 1 == date.day) return "TOMORROW";
-  }
-  return "THE DATE";
+  var tomorrowDate = todayDate.add(Duration(days: 1));
+  if (todayDate.year == date.year &&
+      todayDate.month == date.month &&
+      todayDate.day == date.day) { return "TODAY"; }
+  else if (tomorrowDate.year == date.year &&
+      tomorrowDate.month == date.month &&
+      tomorrowDate.day == date.day) return "TOMORROW";
+  else return "THE DATE";
 }
