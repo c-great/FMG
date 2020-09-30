@@ -1,4 +1,4 @@
-// code from: https://medium.com/@SebastianEngel/easy-push-notifications-with-flutter-and-firebase-cloud-messaging-d96084f5954f
+// base code from: https://medium.com/@SebastianEngel/easy-push-notifications-with-flutter-and-firebase-cloud-messaging-d96084f5954f
 
 import 'package:firebase_messaging/firebase_messaging.dart';
 
@@ -19,11 +19,12 @@ class PushNotificationsManager {
       _firebaseMessaging.requestNotificationPermissions();
       _firebaseMessaging.configure();
 
-      // For testing purposes print the Firebase Messaging token
-      String token = await _firebaseMessaging.getToken();
-      print("FirebaseMessaging token: $token");
-
       _initialized = true;
     }
+  }
+
+   Future<String> getToken() async {
+    String token = await _firebaseMessaging.getToken();
+    return token;
   }
 }

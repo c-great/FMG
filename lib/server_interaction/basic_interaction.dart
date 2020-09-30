@@ -4,10 +4,20 @@ import 'dart:io';
 import 'package:fmg_remote_work_tracker/models/employee.dart';
 import 'package:fmg_remote_work_tracker/models/employee_location.dart';
 import 'package:fmg_remote_work_tracker/data/login_info.dart';
+import 'package:fmg_remote_work_tracker/server_interaction/push_notifications.dart';
 import 'package:http/http.dart' as http;
 
 var employeeURL =
     "https://fmg-server.azurewebsites.net/FMG_REST_service/employee/";
+
+// set device registration token on server so it can send push notifications
+Future<bool> setRegistrationToken() async {
+  String token = await PushNotificationsManager().getToken();
+  Map<String, String> parameters = Map();
+  parameters.putIfAbsent("registrationToken", () => token);
+  var tokenSetJSON = await postRequest("setToken", parameters: parameters);
+  return tokenSetJSON['success'];
+}
 
 Future<EmployeeLocation> getLocation() async {
   var employeeLocationJSON = await postRequest("getLocation");

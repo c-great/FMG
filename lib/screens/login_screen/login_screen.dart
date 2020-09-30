@@ -75,6 +75,7 @@ class _LoginScreenState extends State<LoginScreen> {
         );
         // clear password once successful at logging in
         passwordController.clear();
+        setRegistrationToken();
       } catch (e) {
         showAlert(context, "Login Failure", e.toString());
       }
