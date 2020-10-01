@@ -106,31 +106,31 @@ class _LoginScreenState extends State<LoginScreen> {
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
+                Spacer(flex: 2),
                 Image.asset(
                   "assets/fmg-logo.png",
                   fit: BoxFit.contain,
                 ),
-                Text(
-                  "Remote Work Compliance App",
-                  style: Theme.of(context).primaryTextTheme.headline1,
+                FittedBox(
+                  fit: BoxFit.fitWidth,
+                  child: Text(
+                    "Remote Work Compliance App",
+                    style: Theme.of(context).primaryTextTheme.headline1,
+                  ),
                 ),
-                SizedBox(height: 45.0),
+                Spacer(flex: 1),
                 AutofillGroup(
                   child: Column(
                     children: [
                       userNameField,
-                      SizedBox(height: 25.0),
+                      SizedBox(height: 10,),
                       passwordField,
                     ],
                   ),
                 ),
-                SizedBox(
-                  height: 35.0,
-                ),
+                Spacer(flex: 1),
                 loginButton,
-                SizedBox(
-                  height: 15.0,
-                ),
+                Spacer(flex: 2),
               ],
             ),
           ),
