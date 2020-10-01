@@ -19,10 +19,12 @@ class RecordedLocationDisplay extends StatelessWidget {
             future: date,
             builder: (BuildContext context, AsyncSnapshot<DateTime> snapshot) {
               if (snapshot.hasData) {
-                return Text(
-                    "Your recorded location for ${relativeDay(snapshot.data)} "
-                    "(${new DateFormat.MMMMEEEEd().format(snapshot.data)}) "
-                    "is:");
+                return FittedBox(
+                    fit: BoxFit.fitWidth,
+                    child: Text(
+                        "Your recorded location for ${relativeDay(snapshot.data)} "
+                        "(${new DateFormat.MMMMEEEEd().format(snapshot.data)}) "
+                        "is:"));
               } else {
                 return Text("Waiting for data...");
               }
@@ -31,15 +33,14 @@ class RecordedLocationDisplay extends StatelessWidget {
           height: 10,
         ),
         FutureBuilder<EmployeeLocation>(
-          future: location,
-          builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              return snapshot.data.display();
-            } else {
-              return displayBox(Text(""));
-            }
-          }
-        )
+            future: location,
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                return snapshot.data.display();
+              } else {
+                return displayBox(Text(""));
+              }
+            })
       ],
     );
   }
@@ -50,9 +51,12 @@ String relativeDay(DateTime date) {
   var tomorrowDate = todayDate.add(Duration(days: 1));
   if (todayDate.year == date.year &&
       todayDate.month == date.month &&
-      todayDate.day == date.day) { return "TODAY"; }
-  else if (tomorrowDate.year == date.year &&
+      todayDate.day == date.day) {
+    return "TODAY";
+  } else if (tomorrowDate.year == date.year &&
       tomorrowDate.month == date.month &&
-      tomorrowDate.day == date.day) return "TOMORROW";
-  else return "THE DATE";
+      tomorrowDate.day == date.day)
+    return "TOMORROW";
+  else
+    return "THE DATE";
 }
