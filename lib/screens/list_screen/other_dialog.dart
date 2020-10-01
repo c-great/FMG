@@ -12,6 +12,7 @@ SimpleDialog createOtherAdditionalInfoDialog(
     title: Text(title),
     children: <Widget>[
       TextField(
+        maxLength: 35,
         controller: controller,
         decoration: InputDecoration(
           contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),

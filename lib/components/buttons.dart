@@ -52,7 +52,8 @@ class _OfficeSelectButtonState extends State<OfficeSelectButton> {
   Widget build(BuildContext context) {
     return _makeSelectScreenButton(
         context,
-        _makeSelectScreenButtonLabel(location.officeLocation, location.additionalInfo, context),
+        _makeSelectScreenButtonLabel(
+            location.officeLocation, location.additionalInfo, context),
         _navigateToOfficeSelection);
   }
 }
@@ -93,7 +94,8 @@ class _AbsenceTypeSelectButtonState extends State<AbsenceTypeSelectButton> {
   Widget build(BuildContext context) {
     return _makeSelectScreenButton(
         context,
-        _makeSelectScreenButtonLabel(location.absenceType.asString(), location.additionalInfo, context),
+        _makeSelectScreenButtonLabel(
+            location.absenceType.asString(), location.additionalInfo, context),
         _navigateToOfficeSelection);
   }
 }
@@ -116,16 +118,19 @@ Widget _makeSelectScreenButton(
   );
 }
 
-Widget _makeSelectScreenButtonLabel(String main, String sub, BuildContext context) {
+Widget _makeSelectScreenButtonLabel(
+    String main, String sub, BuildContext context) {
   if (sub == null) {
     return Center(child: Text(main));
   } else {
     return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.center,
       children: <Widget>[
-      Text(main),
-      Text(sub, style: Theme.of(context).primaryTextTheme.subtitle1),
-    ],);
+        Spacer(flex: 8,),
+        Text(main),
+        Spacer(flex: 1,),
+        Text(sub, style: Theme.of(context).primaryTextTheme.subtitle1),
+        Spacer(flex: 8,),
+      ],
+    );
   }
 }
