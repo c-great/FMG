@@ -79,10 +79,6 @@ class _HomePageState extends State<HomePage> {
             ),
           ),
           ListTile(
-            leading: Icon(Icons.message),
-            title: Text('Messages'),
-          ),
-          ListTile(
             leading: Icon(Icons.account_circle),
             title: Text('Profile'),
           ),
