@@ -5,12 +5,11 @@ import 'package:fmg_remote_work_tracker/screens/home_screen/manage_defaults.dart
 import 'package:fmg_remote_work_tracker/screens/list_screen/absent_options_list_screen.dart';
 import 'package:fmg_remote_work_tracker/screens/list_screen/office_list_screen.dart';
 import 'package:fmg_remote_work_tracker/screens/login_screen/login_screen.dart';
+import 'package:fmg_remote_work_tracker/screens/profile_screen/profile_screen.dart';
 import 'package:fmg_remote_work_tracker/server_interaction/basic_interaction.dart';
 import 'package:fmg_remote_work_tracker/models/employee_location.dart';
 import 'package:fmg_remote_work_tracker/components/buttons.dart';
 import 'location_display.dart';
-
-
 
 class HomePage extends StatefulWidget {
   HomePage({Key key, this.title}) : super(key: key);
@@ -81,16 +80,23 @@ class _HomePageState extends State<HomePage> {
           ListTile(
             leading: Icon(Icons.account_circle),
             title: Text('Profile'),
+            onTap: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => ProfileScreen(
+                            employee: user,
+                          )));
+            },
           ),
           ListTile(
             leading: Icon(Icons.location_city),
             title: Text("Change Default Office Location"),
-
-            subtitle:
-            defaultOffice.additionalInfo == null
+            subtitle: defaultOffice.additionalInfo == null
                 ? Text(defaultOffice.officeLocation)
-                : Text(defaultOffice.officeLocation + " - " + defaultOffice.additionalInfo),
-
+                : Text(defaultOffice.officeLocation +
+                    " - " +
+                    defaultOffice.additionalInfo),
             onTap: () async {
               final result = await Navigator.push(
                 context,
@@ -109,12 +115,11 @@ class _HomePageState extends State<HomePage> {
           ListTile(
             leading: Icon(Icons.beach_access),
             title: Text("Change Default Absence Type"),
-
-            subtitle:
-            defaultAbsence.additionalInfo == null
+            subtitle: defaultAbsence.additionalInfo == null
                 ? Text(defaultAbsence.absenceType.asString())
-                : Text(defaultAbsence.absenceType.asString() + " - " + defaultAbsence.additionalInfo),
-
+                : Text(defaultAbsence.absenceType.asString() +
+                    " - " +
+                    defaultAbsence.additionalInfo),
             onTap: () async {
               final result = await Navigator.push(
                 context,
@@ -178,8 +183,7 @@ class _HomePageState extends State<HomePage> {
           },
         ),
       ]);
-    }
-    else {
+    } else {
       return SizedBox();
     }
   }
@@ -207,16 +211,14 @@ class _HomePageState extends State<HomePage> {
               },
             ),
             LargeButton(
-
                 child: Row(children: [
                   Expanded(
                     child: Center(child: Text("Office")),
                   ),
-
                   Icon(Icons.location_city),
-                ]), callback: _changeToOffice),
+                ]),
+                callback: _changeToOffice),
           ]),
-
           _expandedRow(children: [
             SizedBox(),
             LargeButton(
@@ -252,16 +254,15 @@ class _HomePageState extends State<HomePage> {
           _getTeamScreenButton(),
           _expandedRow(children: [
             LargeButton(
-              child: Row(children: [
-                Expanded(
-                  child: Center(child: Text("Schedule Future Locations")),
-                ),
-                Icon(Icons.date_range),
-              ]),
-              callback:(){
-                Navigator.pushNamed(context, '/CalendarScreen');
-              }
-            ),
+                child: Row(children: [
+                  Expanded(
+                    child: Center(child: Text("Schedule Future Locations")),
+                  ),
+                  Icon(Icons.date_range),
+                ]),
+                callback: () {
+                  Navigator.pushNamed(context, '/CalendarScreen');
+                }),
           ])
         ],
       ),
