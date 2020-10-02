@@ -51,7 +51,10 @@ class _OfficeSelectButtonState extends State<OfficeSelectButton> {
   @override
   Widget build(BuildContext context) {
     return _makeSelectScreenButton(
-        context, location.officeLocation, _navigateToOfficeSelection);
+        context,
+        _makeSelectScreenButtonLabel(
+            location.officeLocation, location.additionalInfo, context),
+        _navigateToOfficeSelection);
   }
 }
 
@@ -90,17 +93,20 @@ class _AbsenceTypeSelectButtonState extends State<AbsenceTypeSelectButton> {
   @override
   Widget build(BuildContext context) {
     return _makeSelectScreenButton(
-        context, location.absenceType.asString(), _navigateToOfficeSelection);
+        context,
+        _makeSelectScreenButtonLabel(
+            location.absenceType.asString(), location.additionalInfo, context),
+        _navigateToOfficeSelection);
   }
 }
 
 Widget _makeSelectScreenButton(
-    BuildContext context, String label, Function onPress) {
+    BuildContext context, Widget label, Function onPress) {
   return RaisedButton(
     child: Row(
       children: [
         Expanded(
-          child: Center(child: Text(label)),
+          child: label,
         ),
         Icon(Icons.menu)
       ],
@@ -110,4 +116,22 @@ Widget _makeSelectScreenButton(
       onPress(context);
     },
   );
+}
+
+Widget _makeSelectScreenButtonLabel(
+    String main, String sub, BuildContext context) {
+  if (sub == null) {
+    return Center(child: Text(main));
+  } else {
+    // this solution is a bit inelegant, but was getting overflow errors before this
+    return Column(
+      children: <Widget>[
+        Spacer(flex: 8,),
+        Expanded(flex: 4, child: Text(main),),
+        Spacer(flex: 1,),
+        Expanded(flex: 4, child: Text(sub, style: Theme.of(context).primaryTextTheme.subtitle1),),
+        Spacer(flex: 8,),
+      ],
+    );
+  }
 }

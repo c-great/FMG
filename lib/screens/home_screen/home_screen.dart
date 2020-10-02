@@ -89,7 +89,12 @@ class _HomePageState extends State<HomePage> {
           ListTile(
             leading: Icon(Icons.location_city),
             title: Text("Change Default Office Location"),
-            subtitle: Text(defaultOffice.officeLocation),
+
+            subtitle:
+            defaultOffice.additionalInfo == null
+                ? Text(defaultOffice.officeLocation)
+                : Text(defaultOffice.officeLocation + " - " + defaultOffice.additionalInfo),
+
             onTap: () async {
               final result = await Navigator.push(
                 context,
@@ -108,7 +113,12 @@ class _HomePageState extends State<HomePage> {
           ListTile(
             leading: Icon(Icons.beach_access),
             title: Text("Change Default Absence Type"),
-            subtitle: Text(defaultAbsence.absenceType.asString()),
+
+            subtitle:
+            defaultAbsence.additionalInfo == null
+                ? Text(defaultAbsence.absenceType.asString())
+                : Text(defaultAbsence.absenceType.asString() + " - " + defaultAbsence.additionalInfo),
+
             onTap: () async {
               final result = await Navigator.push(
                 context,

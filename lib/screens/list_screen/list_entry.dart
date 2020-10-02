@@ -15,3 +15,15 @@ Card getRegularListItem(
     )
   );
 }
+
+Card getOtherListItem(Function callback)
+{
+  return Card(
+      child: ListTile(
+        title: Center(child: Text("Other")),
+        onTap: () {
+          callback();
+        },
+      )
+  );
+}
