@@ -123,12 +123,13 @@ Widget _makeSelectScreenButtonLabel(
   if (sub == null) {
     return Center(child: Text(main));
   } else {
+    // this solution is a bit inelegant, but was getting overflow errors before this
     return Column(
       children: <Widget>[
         Spacer(flex: 8,),
-        Text(main),
+        Expanded(flex: 4, child: Text(main),),
         Spacer(flex: 1,),
-        Text(sub, style: Theme.of(context).primaryTextTheme.subtitle1),
+        Expanded(flex: 4, child: Text(sub, style: Theme.of(context).primaryTextTheme.subtitle1),),
         Spacer(flex: 8,),
       ],
     );
