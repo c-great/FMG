@@ -29,9 +29,6 @@ class RecordedLocationDisplay extends StatelessWidget {
                 return Text("Waiting for data...");
               }
             }),
-        SizedBox(
-          height: 10,
-        ),
         FutureBuilder<EmployeeLocation>(
             future: location,
             builder: (context, snapshot) {

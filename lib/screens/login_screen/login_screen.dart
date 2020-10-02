@@ -128,7 +128,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     ],
                   ),
                 ),
-                Spacer(flex: 1),
+                Expanded(flex: 3, child: Container(),),
                 loginButton,
                 Spacer(flex: 2),
               ],

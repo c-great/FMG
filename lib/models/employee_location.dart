@@ -6,22 +6,29 @@ enum Location { OFFICE, HOME, ABSENT, UNDEFINED }
 extension LocationText on Location {
   // ignore: missing_return
   String asString() {
-    switch(this) {
-      case Location.OFFICE: return "Office";
-      break;
+    switch (this) {
+      case Location.OFFICE:
+        return "Office";
+        break;
 
-      case Location.HOME: return "Home";
-      break;
+      case Location.HOME:
+        return "Home";
+        break;
 
-      case Location.ABSENT: return "Absent";
-      break;
+      case Location.ABSENT:
+        return "Absent";
+        break;
 
-      case Location.UNDEFINED: return "Location Undefined";
+      case Location.UNDEFINED:
+        return "Location Undefined";
     }
   }
 
   Text asText() {
-    return Text(this.asString(), style: locationTitle(),);
+    return Text(
+      this.asString(),
+      style: locationTitle(),
+    );
   }
 }
 
@@ -50,28 +57,38 @@ enum AbsentOptions { SICK_LEAVE, ANNUAL_LEAVE, OTHER }
 
 AbsentOptions getAbsenceType(String string) {
   var lowerString = string.toLowerCase();
-  if (lowerString == "sick leave") return AbsentOptions.SICK_LEAVE;
-  else if (lowerString == "annual leave") return AbsentOptions.ANNUAL_LEAVE;
-  else if (lowerString == "other") return AbsentOptions.OTHER;
-  else return null;
+  if (lowerString == "sick leave")
+    return AbsentOptions.SICK_LEAVE;
+  else if (lowerString == "annual leave")
+    return AbsentOptions.ANNUAL_LEAVE;
+  else if (lowerString == "other")
+    return AbsentOptions.OTHER;
+  else
+    return null;
 }
 
 extension AbsentText on AbsentOptions {
   // ignore: missing_return
   String asString() {
-    switch(this) {
-      case AbsentOptions.SICK_LEAVE: return "Sick Leave";
-      break;
+    switch (this) {
+      case AbsentOptions.SICK_LEAVE:
+        return "Sick Leave";
+        break;
 
-      case AbsentOptions.ANNUAL_LEAVE: return "Annual Leave";
-      break;
+      case AbsentOptions.ANNUAL_LEAVE:
+        return "Annual Leave";
+        break;
 
-      case AbsentOptions.OTHER: return "Other";
+      case AbsentOptions.OTHER:
+        return "Other";
     }
   }
 
   Text asText() {
-    return Text(this.asString(), style: subTitle(),);
+    return Text(
+      this.asString(),
+      style: subTitle(),
+    );
   }
 }
 
@@ -94,19 +111,19 @@ class EmployeeLocation {
           absenceType: getAbsenceType(json['absenceType']),
           additionalInfo: json['additionalInfo']);
     }
-      return new EmployeeLocation();
+    return new EmployeeLocation();
   }
-  
+
   Map<String, String> toMap() {
     Map<String, String> map = new Map();
     map.putIfAbsent("location", () => location.asString());
-    map.putIfAbsent("working", () => working ? "true": "false");
+    map.putIfAbsent("working", () => working ? "true" : "false");
     return map;
   }
 
   Widget display() {
     return displayBox(Column(
-    children: <Widget>[Text("Location Undefined")],
+      children: <Widget>[location.asText()],
     ));
   }
 }
@@ -124,7 +141,6 @@ class EmployeeAtHome extends EmployeeLocation {
     var map = super.toMap();
     return map;
   }
-
 }
 
 class EmployeeAtOffice extends EmployeeLocation {
@@ -138,7 +154,11 @@ class EmployeeAtOffice extends EmployeeLocation {
     return displayBox(Column(
       children: <Widget>[
         location.asText(),
-        if (officeLocation != null) Text(officeLocation, style: subTitle(),),
+        if (officeLocation != null)
+          Text(
+            officeLocation,
+            style: subTitle(),
+          ),
         if (additionalInfo != null) Text(additionalInfo),
       ],
     ));
@@ -189,7 +209,13 @@ class EmployeeAbsent extends EmployeeLocation {
 
 Widget displayBox(Widget child) {
   return SizedBox(
-    height: 150,
-    child: child,
+    height: 130,
+    child: Center(
+        child: Card(
+            // color: appTheme().accentColor,
+            child: Center(
+                child: Column(
+              children: <Widget>[Spacer(), child, Spacer()],
+            )))),
   );
 }
