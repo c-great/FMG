@@ -9,6 +9,8 @@ import 'package:http/http.dart' as http;
 
 var employeeURL =
     "https://fmg-server.azurewebsites.net/FMG_REST_service/employee/";
+var managerURL =
+    "https://fmg-server.azurewebsites.net/FMG_REST_service/manager/";
 
 // set device registration token on server so it can send push notifications
 Future<bool> setRegistrationToken() async {
@@ -64,4 +66,34 @@ Future<DateTime> getDateOfInterest() async {
     throw Exception("server interaction failed");
   }
   return date;
+}
+
+// Gets Team Members. Named this way because it decides who members are by the manager_id they're assigned.
+Future<List<Employee>> getDirectReports() async {
+  var teamMembers = new List<Employee>();
+  var employeeJSON = await postRequestManager("getDirectReports");
+  for (var i=0; i<employeeJSON.length; i++) {
+    teamMembers.add(Employee.fromJSON(employeeJSON[i]));
+  }
+  return teamMembers;
+}
+
+// For manager servlet.
+Future<List> postRequestManager(String functionURL) async {
+  List output;
+  var response = await http.post(
+    managerURL + functionURL,
+    headers: {
+      HttpHeaders.authorizationHeader: "BASIC ${LoginInfo.getEncodedLogin()}"
+    },
+//    body: parameters,
+  );
+  if (response.statusCode == 200) {
+    output = json.decode(response.body);
+  } else if (response.statusCode == 401){
+    throw Exception("Invalid Username/Password");
+  } else {
+    throw Exception("Server Interaction Failed");
+  }
+  return output;
 }
