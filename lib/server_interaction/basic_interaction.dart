@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:intl/intl.dart';
 
 import 'package:fmg_remote_work_tracker/models/employee.dart';
 import 'package:fmg_remote_work_tracker/models/employee_location.dart';
@@ -46,6 +47,29 @@ Future<List<LocationDateRange>> getFutureLocations() async {
 Future<bool> setLocation(EmployeeLocation location) async {
   var employeeLocationSetBoolJSON =
       await postRequest("setLocation", parameters: location.toMap());
+  return employeeLocationSetBoolJSON['success'];
+}
+
+Future<bool> clearFutureLocations(DateTime startDate, DateTime endDate) async {
+  Map<String, String> dateParameters = {
+    "startDate": new DateFormat.MMMMEEEEd().format(startDate),
+    "endDate": new DateFormat.MMMMEEEEd().format(startDate),
+  };
+
+  var employeeLocationSetBoolJSON =
+      await postRequest("setLocation", parameters: dateParameters);
+  return employeeLocationSetBoolJSON['success'];
+}
+
+Future<bool> setFutureLocations(LocationDateRange locationDateRange) async {
+  Map<String, String> locationDateParameters = {
+    "startDate": new DateFormat.MMMMEEEEd().format(locationDateRange.startDate),
+    "endDate": new DateFormat.MMMMEEEEd().format(locationDateRange.endDate),
+  };
+  locationDateParameters.addAll(locationDateRange.employeeLocation.toMap());
+
+  var employeeLocationSetBoolJSON =
+  await postRequest("setLocation", parameters: locationDateParameters);
   return employeeLocationSetBoolJSON['success'];
 }
 
