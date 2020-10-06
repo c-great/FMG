@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:fmg_remote_work_tracker/models/employee.dart';
 import 'package:fmg_remote_work_tracker/models/employee_location.dart';
 import 'dart:core';
 
 import 'package:fmg_remote_work_tracker/screens/list_screen/team_edit_options_list.dart';
+import 'package:fmg_remote_work_tracker/server_interaction/basic_interaction.dart';
 // fixme: Clean up all the useless comments when done.
 // Screen for displaying team information.
 
@@ -13,6 +15,7 @@ List<String> teamAttendance =  [];
 List<String> teamLocation =  [];
 List<String> teamNumber =  [];
 String chosenEdit;
+List<Employee> teamMembers = [];
 
 class Team { //extends EmployeeInfo
   String name, attendance, location, team;
@@ -63,6 +66,10 @@ _navigateTeamEditOptionsScreen(BuildContext context) async {
 
 }
 
+void initTeamMembers() async {
+  List<Employee> getTeam = await getDirectReports();
+  teamMembers = getTeam;
+}
 // Team Page state
 class TeamPage extends StatefulWidget {
   @override
@@ -88,6 +95,7 @@ class EditText extends State<TeamPage> {
   @override
   Widget build(BuildContext context) {
   initTeam();
+  initTeamMembers();
     return Scaffold(
 //      appBar: AppBar(
 //        title: Text("Editable Text"),
@@ -127,24 +135,27 @@ class EditText extends State<TeamPage> {
       );
     return Scaffold(
       appBar: AppBar(
-        title: Text("My Teams"),
+        title: Text("My Team"),
       ),
       body: Column ( //GridView.count
         // Generate widgets that display a team member name, attendance and location.
-        children: List.generate(teamName.length, (index) {
-          var name = teamName[index];
-          var attendance = teamAttendance[index];
-          var location = teamLocation[index];
-          var number = teamNumber[index];
+        children: List.generate(teamMembers.length, (index) {
+//          var name = teamName[index];
+//          var attendance = teamAttendance[index];
+//          var location = teamLocation[index];
+//          var number = teamNumber[index];
+          var firstName = teamMembers[index].firstName;
+//          var attendance = getLocation(ji);
           return SizedBox(
             width: double.infinity,
             height: 50,
             child: Wrap(runSpacing: 10, children: <Widget>[
               RaisedButton(
                 child: Row(children: <Widget>[
-                  Expanded(child: Text('$name , $attendance , $location'))
+                  Expanded(child: Text('$firstName'))
                 ]),
                 onPressed: () async {
+//                  print(teamMembers[1].firstName);
                   // Update nameNumber so we know which person to update
                   nameNumber = index;
                   // Path to attendance/location options, the choice is returned as result.
@@ -176,8 +187,55 @@ class EditText extends State<TeamPage> {
 
 
 
-
-
+//working
+//return Scaffold(
+//appBar: AppBar(
+//title: Text("My Teams"),
+//),
+//body: Column ( //GridView.count
+//// Generate widgets that display a team member name, attendance and location.
+//children: List.generate(teamName.length, (index) {
+//var name = teamName[index];
+//var attendance = teamAttendance[index];
+//var location = teamLocation[index];
+//var number = teamNumber[index];
+//return SizedBox(
+//width: double.infinity,
+//height: 50,
+//child: Wrap(runSpacing: 10, children: <Widget>[
+//RaisedButton(
+//child: Row(children: <Widget>[
+//Expanded(child: Text('$name , $attendance , $location'))
+//]),
+//onPressed: () async {
+//var teamMembers = await getDirectReports();
+//print(teamMembers[1].firstName);
+//// Update nameNumber so we know which person to update
+//nameNumber = index;
+//// Path to attendance/location options, the choice is returned as result.
+//final result = await Navigator.push(
+//context,
+//MaterialPageRoute(builder: (context) => TeamEditOptionsScreen()),
+//);
+//if (result == "Attendance") {
+//// Set the shown text to what it is currently. Then start editing.
+//_editingController.text = teamAttendance[nameNumber];
+//setState(() {
+//_isEditingAttendance = true;
+//});
+//} else if (result == "Location") {
+//_editingController.text = teamLocation[nameNumber];
+//setState(() {
+//_isEditingLocation = true;
+//});
+//}
+//},
+//),
+//]),
+//);
+//}),
+//),
+//);
 
 
 
