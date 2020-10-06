@@ -261,7 +261,7 @@ class _HomePageState extends State<HomePage> {
                   Icon(Icons.date_range),
                 ]),
                 callback: () {
-                  Navigator.pushNamed(context, '/CalendarScreen');
+                  Navigator.pushNamed(context, '/ScheduleFutureScreen');
                 }),
           ])
         ],
