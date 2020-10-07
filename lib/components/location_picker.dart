@@ -3,22 +3,34 @@ import 'package:fmg_remote_work_tracker/components/buttons.dart';
 import 'package:fmg_remote_work_tracker/models/employee_location.dart';
 
 class LocationPicker extends StatefulWidget {
+  final EmployeeAbsent defaultAbsence;
+  final EmployeeAtOffice defaultOffice;
+  final EmployeeLocation startingLocation;
+  final Function updateLocation;
+
+  LocationPicker({this.defaultAbsence, this.defaultOffice, this.startingLocation, this.updateLocation});
+
+
   @override
   State<StatefulWidget> createState() {
-    return _LocationPickerState();
+    return _LocationPickerState(
+      employeeLocation: startingLocation,
+      selectedAbsenceType: defaultAbsence,
+      selectedOfficeLocation: defaultOffice,
+      updateLocation: updateLocation,
+    );
   }
 }
 
 class _LocationPickerState extends State<LocationPicker> {
-  EmployeeLocation employeeLocation =
-      EmployeeLocation(location: Location.UNDEFINED);
+  EmployeeLocation employeeLocation;
 
-  EmployeeAtOffice selectedOfficeLocation =
-      EmployeeAtOffice(officeLocation: "flies");
-  EmployeeAbsent selectedAbsenceType =
-      EmployeeAbsent(absenceType: AbsentOptions.SICK_LEAVE);
+  EmployeeAtOffice selectedOfficeLocation;
+  EmployeeAbsent selectedAbsenceType;
 
-  _LocationPickerState();
+  Function updateLocation;
+
+  _LocationPickerState({this.employeeLocation, this.selectedAbsenceType, this.selectedOfficeLocation, this.updateLocation});
 
   Widget _expandedRow({List<Widget> children}) {
     var expandedChildren = children.map((e) => Expanded(
@@ -48,6 +60,7 @@ class _LocationPickerState extends State<LocationPicker> {
                 Icon(Icons.location_city),
               ]),
               callback: () {
+                updateLocation(selectedOfficeLocation);
                 setState(() {
                   employeeLocation = selectedOfficeLocation;
                 });
@@ -65,8 +78,10 @@ class _LocationPickerState extends State<LocationPicker> {
                 Icon(Icons.home),
               ]),
               callback: () {
+                var home = new EmployeeAtHome();
+                updateLocation(home);
                 setState(() {
-                  employeeLocation = new EmployeeAtHome();
+                  employeeLocation = home;
                 });
               }),
         ],
@@ -86,6 +101,7 @@ class _LocationPickerState extends State<LocationPicker> {
             Icon(Icons.beach_access),
           ]),
           callback: () {
+            updateLocation(selectedAbsenceType);
             setState(() {
               employeeLocation = selectedAbsenceType;
             });

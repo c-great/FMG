@@ -1,20 +1,30 @@
 import 'package:flutter/material.dart';
+import 'package:fmg_remote_work_tracker/models/employee_location.dart';
 import 'package:fmg_remote_work_tracker/screens/schedule_future_screen/future_location_dialog.dart';
 import 'package:fmg_remote_work_tracker/screens/schedule_future_screen/future_location_widget_handling.dart';
 import 'package:fmg_remote_work_tracker/server_interaction/basic_interaction.dart';
 
 class ScheduleFutureScreen extends StatefulWidget {
+  final EmployeeAbsent defaultAbsence;
+  final EmployeeAtOffice defaultOffice;
+
+  ScheduleFutureScreen({this.defaultAbsence, this.defaultOffice});
+
   @override
   _ScheduleFutureScreenState createState() {
-    return _ScheduleFutureScreenState();
+    return _ScheduleFutureScreenState(
+        defaultAbsence: defaultAbsence,
+        defaultOffice: defaultOffice);
   }
 }
 
 class _ScheduleFutureScreenState extends State<ScheduleFutureScreen> {
-  final context;
   Future<List<Widget>> futureLocationWidgets;
 
-  _ScheduleFutureScreenState({this.context});
+  final EmployeeAbsent defaultAbsence;
+  final EmployeeAtOffice defaultOffice;
+
+  _ScheduleFutureScreenState({this.defaultAbsence, this.defaultOffice});
 
   @override
   void initState() {
@@ -53,7 +63,14 @@ class _ScheduleFutureScreenState extends State<ScheduleFutureScreen> {
         backgroundColor: Theme.of(context).primaryColor,
         onPressed: () {showDialog(context: context,
         builder: (BuildContext context) {
-          return createFutureLocationDialog(context, () {}, "title");
+          return createFutureLocationDialog(
+              context,
+                  () {
+                updateFutureLocations();
+                },
+              defaultAbsence,
+              defaultOffice,
+              EmployeeLocation(location: Location.UNDEFINED));
         });}
       ),
     );

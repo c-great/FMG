@@ -6,6 +6,7 @@ import 'package:fmg_remote_work_tracker/screens/list_screen/absent_options_list_
 import 'package:fmg_remote_work_tracker/screens/list_screen/office_list_screen.dart';
 import 'package:fmg_remote_work_tracker/screens/login_screen/login_screen.dart';
 import 'package:fmg_remote_work_tracker/screens/profile_screen/profile_screen.dart';
+import 'package:fmg_remote_work_tracker/screens/schedule_future_screen/schedule_future_screen.dart';
 import 'package:fmg_remote_work_tracker/server_interaction/basic_interaction.dart';
 import 'package:fmg_remote_work_tracker/models/employee_location.dart';
 import 'package:fmg_remote_work_tracker/components/buttons.dart';
@@ -261,7 +262,12 @@ class _HomePageState extends State<HomePage> {
                   Icon(Icons.date_range),
                 ]),
                 callback: () {
-                  Navigator.pushNamed(context, '/ScheduleFutureScreen');
+                  Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) {
+                    return ScheduleFutureScreen(
+                      defaultAbsence: defaultAbsence,
+                      defaultOffice: defaultOffice,
+                    );
+                  }));
                 }),
           ])
         ],
