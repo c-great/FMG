@@ -13,8 +13,7 @@ class ScheduleFutureScreen extends StatefulWidget {
   @override
   _ScheduleFutureScreenState createState() {
     return _ScheduleFutureScreenState(
-        defaultAbsence: defaultAbsence,
-        defaultOffice: defaultOffice);
+        defaultAbsence: defaultAbsence, defaultOffice: defaultOffice);
   }
 }
 
@@ -36,8 +35,20 @@ class _ScheduleFutureScreenState extends State<ScheduleFutureScreen> {
     var futureLocations = getFutureLocations();
     setState(() {
       futureLocationWidgets = getLocationDateRangeDisplayWidgets(
-          futureLocations, updateFutureLocations);
+          futureLocations, updateFutureLocations, _edit);
     });
+  }
+
+  _edit(
+      EmployeeLocation employeeLocation, DateTime startDate, DateTime endDate) {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return createFutureLocationDialog(context, () {
+            updateFutureLocations();
+          }, defaultAbsence, defaultOffice, employeeLocation,
+              initialStart: startDate, initialEnd: endDate);
+        });
   }
 
   @override
@@ -59,20 +70,18 @@ class _ScheduleFutureScreenState extends State<ScheduleFutureScreen> {
         },
       ),
       floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.add),
-        backgroundColor: Theme.of(context).primaryColor,
-        onPressed: () {showDialog(context: context,
-        builder: (BuildContext context) {
-          return createFutureLocationDialog(
-              context,
-                  () {
-                updateFutureLocations();
-                },
-              defaultAbsence,
-              defaultOffice,
-              EmployeeLocation(location: Location.UNDEFINED));
-        });}
-      ),
+          child: Icon(Icons.add),
+          backgroundColor: Theme.of(context).primaryColor,
+          onPressed: () {
+            showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return createFutureLocationDialog(context, () {
+                    updateFutureLocations();
+                  }, defaultAbsence, defaultOffice,
+                      EmployeeLocation(location: Location.UNDEFINED));
+                });
+          }),
     );
   }
 }

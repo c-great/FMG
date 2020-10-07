@@ -5,19 +5,21 @@ import 'package:fmg_remote_work_tracker/theme/style.dart';
 import 'package:intl/intl.dart';
 
 Future<List<Widget>> getLocationDateRangeDisplayWidgets(
-    Future<List<LocationDateRange>> futureLocations, Function update) async {
+    Future<List<LocationDateRange>> futureLocations,
+    Function update,
+    Function edit) async {
   List<Widget> widgetList = [];
   List<LocationDateRange> scheduledLocations = await futureLocations;
 
   scheduledLocations.forEach((element) {
-    widgetList.add(getLocationDateRangeDisplayWidget(element, update));
+    widgetList.add(getLocationDateRangeDisplayWidget(element, update, edit));
   });
 
   return widgetList;
 }
 
 Widget getLocationDateRangeDisplayWidget(
-    LocationDateRange locationDateRange, Function update) {
+    LocationDateRange locationDateRange, Function update, Function edit) {
   return Card(
       color: appTheme().primaryColorLight,
       child: Column(
@@ -43,6 +45,10 @@ Widget getLocationDateRangeDisplayWidget(
               ),
               IconButton(
                 icon: Icon(Icons.edit),
+                onPressed: () {
+                  edit(locationDateRange.employeeLocation,
+                      locationDateRange.startDate, locationDateRange.endDate);
+                },
               ),
             ]),
           ),

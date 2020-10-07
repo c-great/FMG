@@ -1,27 +1,45 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fmg_remote_work_tracker/components/buttons.dart';
 import 'package:intl/intl.dart';
 
 class DateRangePicker extends StatefulWidget {
-  Function updateDateRange;
+  final Function updateDateRange;
 
-  DateRangePicker({this.updateDateRange});
+  final DateTime initialStart;
+  final DateTime initialEnd;
+
+  DateRangePicker({this.updateDateRange, this.initialStart, this.initialEnd});
 
   @override
   State<StatefulWidget> createState() {
-    return _DateRangePickerState(updateDateRange: updateDateRange);
+    return _DateRangePickerState(
+        updateDateRange: updateDateRange,
+        initialStart: initialStart,
+        initialEnd: initialEnd);
   }
-
 }
 
 class _DateRangePickerState extends State<DateRangePicker> {
-  Future<DateTimeRange> dateRange;
+  Future<DateTimeRange> futureDateRange;
+  DateTimeRange dateRange;
   DateFormat dateFormat = DateFormat("d/M/y");
 
   Function updateDateRange;
 
-  _DateRangePickerState({this.updateDateRange});
+  DateTime initialStart;
+  DateTime initialEnd;
+
+  _DateRangePickerState(
+      {@required this.updateDateRange, this.initialStart, this.initialEnd});
+
+  @override
+  initState() {
+    super.initState();
+    if (initialStart != null && initialEnd != null) {
+      dateRange = DateTimeRange(start: initialStart, end: initialEnd);
+      futureDateRange = Future.value(dateRange);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -31,26 +49,30 @@ class _DateRangePickerState extends State<DateRangePicker> {
           child: Text("Select/Edit Date Range"),
           callback: () {
             setState(() {
-              dateRange = showDateRangePicker(
+              futureDateRange = showDateRangePicker(
                 context: context,
                 firstDate: DateTime.now(),
+                initialDateRange: (dateRange != null)
+                    ? dateRange
+                    : null,
                 lastDate: DateTime.now().add(Duration(days: 400)),
               );
             });
-          },),
+          },
+        ),
         FutureBuilder(
-          future: dateRange,
-          builder: (BuildContext context, AsyncSnapshot<DateTimeRange> snapshot) {
+          future: futureDateRange,
+          builder:
+              (BuildContext context, AsyncSnapshot<DateTimeRange> snapshot) {
             if (snapshot.hasData) {
-              DateTimeRange dates = snapshot.data;
-              updateDateRange(dates);
+              dateRange = snapshot.data;
+              updateDateRange(dateRange);
               return Text(
-                  "${dateFormat.format(dates.start)} - ${dateFormat.format(dates.end)}");
+                  "${dateFormat.format(dateRange.start)} - ${dateFormat.format(dateRange.end)}");
             } else {
               return Text("No Dates Set");
             }
           },
-
         )
       ],
     );

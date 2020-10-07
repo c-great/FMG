@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:fmg_remote_work_tracker/components/buttons.dart';
 import 'package:fmg_remote_work_tracker/components/location_picker.dart';
 import 'package:fmg_remote_work_tracker/models/employee_location.dart';
 import 'package:fmg_remote_work_tracker/models/location_date_range.dart';
@@ -11,9 +10,12 @@ SimpleDialog createFutureLocationDialog(
     Function update,
     EmployeeAbsent defaultAbsence,
     EmployeeAtOffice defaultOffice,
-    EmployeeLocation startingLocation) {
+    EmployeeLocation startingLocation,
+    {DateTime initialStart,
+    DateTime initialEnd}) {
+
   DateTimeRange dateRange;
-  EmployeeLocation employeeLocation;
+  EmployeeLocation employeeLocation = startingLocation;
 
   return SimpleDialog(
     children: <Widget>[
@@ -26,6 +28,8 @@ SimpleDialog createFutureLocationDialog(
         },
       ),
       DateRangePicker(
+        initialStart: initialStart,
+        initialEnd: initialEnd,
         updateDateRange: (data) {
           dateRange = data;
         },
@@ -39,12 +43,23 @@ SimpleDialog createFutureLocationDialog(
             color: Theme.of(context).primaryColor,
           ),
           onPressed: () async {
-            if (employeeLocation != null && dateRange != null) {
+            if (employeeLocation.location != Location.UNDEFINED && dateRange != null) {
               LocationDateRange futureLocations = LocationDateRange(
                   employeeLocation: employeeLocation,
                   startDate: dateRange.start,
                   endDate: dateRange.end);
-              await clearFutureLocations(futureLocations.startDate, futureLocations.endDate);
+
+              // wait for both clears to finish (they run simultaneously)
+              if (initialStart != null && initialEnd != null) {
+                await Future.wait([
+                  clearFutureLocations(initialStart, initialEnd),
+                  clearFutureLocations(futureLocations.startDate, futureLocations.endDate)]);
+              }
+              // otherwise, just wait to clear the dates we are trying to set
+              else {
+                await clearFutureLocations(
+                    futureLocations.startDate, futureLocations.endDate);
+              }
               await setFutureLocations(futureLocations);
             }
             Navigator.pop(context);
