@@ -30,16 +30,19 @@ Future<List<LocationDateRange>> getFutureLocations() async {
   List<LocationDateRange> futureLocationDateRanges = [];
 
   List<dynamic> futureLocationsJSON = await postRequest("getFutureLocations");
-  futureLocationsJSON.forEach((element) {
-    DateTime startDate = DateTime.parse(element['startDate']);
-    DateTime endDate = DateTime.parse(element['endDate']);
-    EmployeeLocation employeeLocation = EmployeeLocation.fromJSON(element['employeeLocation']);
-    var locationDateRange = LocationDateRange(
-        employeeLocation: employeeLocation,
-        startDate: startDate,
-        endDate: endDate);
-    futureLocationDateRanges.add(locationDateRange);
-  });
+  if (futureLocationsJSON[0].length > 0) {
+    futureLocationsJSON.forEach((element) {
+      DateTime startDate = DateTime.parse(element['startDate']);
+      DateTime endDate = DateTime.parse(element['endDate']);
+      EmployeeLocation employeeLocation = EmployeeLocation.fromJSON(
+          element['employeeLocation']);
+      var locationDateRange = LocationDateRange(
+          employeeLocation: employeeLocation,
+          startDate: startDate,
+          endDate: endDate);
+      futureLocationDateRanges.add(locationDateRange);
+    });
+  }
 
   return futureLocationDateRanges;
 }
@@ -50,27 +53,29 @@ Future<bool> setLocation(EmployeeLocation location) async {
   return employeeLocationSetBoolJSON['success'];
 }
 
+DateFormat acceptedFormat = new DateFormat("yyyy-MM-dd");
+
 Future<bool> clearFutureLocations(DateTime startDate, DateTime endDate) async {
   Map<String, String> dateParameters = {
-    "startDate": new DateFormat.MMMMEEEEd().format(startDate),
-    "endDate": new DateFormat.MMMMEEEEd().format(startDate),
+    "startDate": acceptedFormat.format(startDate),
+    "endDate": acceptedFormat.format(endDate),
   };
 
-  var employeeLocationSetBoolJSON =
-      await postRequest("setLocation", parameters: dateParameters);
-  return employeeLocationSetBoolJSON['success'];
+  var clearFutureLocationsBoolJSON =
+      await postRequest("clearFutureLocations", parameters: dateParameters);
+  return clearFutureLocationsBoolJSON['success'];
 }
 
 Future<bool> setFutureLocations(LocationDateRange locationDateRange) async {
   Map<String, String> locationDateParameters = {
-    "startDate": new DateFormat.MMMMEEEEd().format(locationDateRange.startDate),
-    "endDate": new DateFormat.MMMMEEEEd().format(locationDateRange.endDate),
+    "startDate": acceptedFormat.format(locationDateRange.startDate),
+    "endDate": acceptedFormat.format(locationDateRange.endDate),
   };
   locationDateParameters.addAll(locationDateRange.employeeLocation.toMap());
 
-  var employeeLocationSetBoolJSON =
-  await postRequest("setLocation", parameters: locationDateParameters);
-  return employeeLocationSetBoolJSON['success'];
+  var futureEmployeeLocationsSetBoolJSON =
+  await postRequest("setFutureLocations", parameters: locationDateParameters);
+  return futureEmployeeLocationsSetBoolJSON['success'];
 }
 
 Future<Employee> getEmployee() async {

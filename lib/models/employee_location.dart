@@ -20,7 +20,7 @@ extension LocationText on Location {
         break;
 
       case Location.UNDEFINED:
-        return "Location Undefined";
+        return "Undefined";
     }
   }
 
