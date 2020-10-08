@@ -6,6 +6,7 @@ import 'package:fmg_remote_work_tracker/screens/list_screen/absent_options_list_
 import 'package:fmg_remote_work_tracker/screens/list_screen/office_list_screen.dart';
 import 'package:fmg_remote_work_tracker/screens/login_screen/login_screen.dart';
 import 'package:fmg_remote_work_tracker/screens/profile_screen/profile_screen.dart';
+import 'package:fmg_remote_work_tracker/screens/schedule_future_screen/schedule_future_screen.dart';
 import 'package:fmg_remote_work_tracker/server_interaction/basic_interaction.dart';
 import 'package:fmg_remote_work_tracker/models/employee_location.dart';
 import 'package:fmg_remote_work_tracker/components/buttons.dart';
@@ -21,10 +22,10 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  Future<EmployeeLocation> _location = getLocation();
-
+  Future<EmployeeLocation> _location;
   Future<EmployeeAtOffice> defaultOfficeFuture;
   Future<EmployeeAbsent> defaultAbsenceFuture;
+  Future<DateTime> dateOfInterestFuture;
 
   EmployeeAtOffice selectedOfficeLocation;
   EmployeeAbsent selectedAbsenceType;
@@ -35,6 +36,9 @@ class _HomePageState extends State<HomePage> {
 
     defaultAbsenceFuture = getDefaultAbsence();
     defaultOfficeFuture = getDefaultOffice();
+
+    _location = getLocation();
+    dateOfInterestFuture = getDateOfInterest();
   }
 
   Future<void> _updateLocation(EmployeeLocation employeeLocation) async {
@@ -200,7 +204,7 @@ class _HomePageState extends State<HomePage> {
         children: [
           RecordedLocationDisplay(
             location: _location,
-            date: getDateOfInterest(),
+            date: dateOfInterestFuture,
           ),
           selectLocationText(_location),
           _expandedRow(children: [
@@ -261,7 +265,13 @@ class _HomePageState extends State<HomePage> {
                   Icon(Icons.date_range),
                 ]),
                 callback: () {
-                  Navigator.pushNamed(context, '/CalendarScreen');
+                  Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) {
+                    return ScheduleFutureScreen(
+                      defaultAbsence: defaultAbsence,
+                      defaultOffice: defaultOffice,
+                      dateOfInterestFuture: dateOfInterestFuture
+                    );
+                  }));
                 }),
           ])
         ],

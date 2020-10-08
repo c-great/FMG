@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:fmg_remote_work_tracker/screens/schedule_future_screen/schedule_future_screen.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:fmg_remote_work_tracker/theme/style.dart';
 import 'package:fmg_remote_work_tracker/screens/login_screen/login_screen.dart';
@@ -34,7 +35,8 @@ class FmgApp extends StatelessWidget {
         '/HomeScreen': (BuildContext context) =>
             HomePage(title: 'FMG - Remote Work Tracker'),
         '/LoginScreen': (BuildContext context) => LoginScreen(),
-        '/CalendarScreen': (BuildContext context) => CalendarScreen()
+        '/CalendarScreen': (BuildContext context) => CalendarScreen(),
+        '/ScheduleFutureScreen': (BuildContext context) => ScheduleFutureScreen(),
       },
     );
   }

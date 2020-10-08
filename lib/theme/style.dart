@@ -6,6 +6,7 @@ ThemeData appTheme() {
     primaryColor: Color(0xFF006938),
     primaryColorLight: Color(0xFF419863),
     primaryColorDark: Color(0xFF003d11),
+    accentColor: Color(0xFF419863),
     primaryTextTheme: TextTheme(
       headline1: TextStyle(color: Color(0xFF006938), fontSize: 30),
       subtitle1: TextStyle(fontStyle: FontStyle.italic, fontSize: 12, color: Colors.black87),

@@ -1,9 +1,11 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:intl/intl.dart';
 
 import 'package:fmg_remote_work_tracker/models/employee.dart';
 import 'package:fmg_remote_work_tracker/models/employee_location.dart';
 import 'package:fmg_remote_work_tracker/data/login_info.dart';
+import 'package:fmg_remote_work_tracker/models/location_date_range.dart';
 import 'package:fmg_remote_work_tracker/server_interaction/push_notifications.dart';
 import 'package:http/http.dart' as http;
 
@@ -24,10 +26,56 @@ Future<EmployeeLocation> getLocation() async {
   return EmployeeLocation.fromJSON(employeeLocationJSON);
 }
 
+Future<List<LocationDateRange>> getFutureLocations() async {
+  List<LocationDateRange> futureLocationDateRanges = [];
+
+  List<dynamic> futureLocationsJSON = await postRequest("getFutureLocations");
+  if (futureLocationsJSON[0].length > 0) {
+    futureLocationsJSON.forEach((element) {
+      DateTime startDate = DateTime.parse(element['startDate']);
+      DateTime endDate = DateTime.parse(element['endDate']);
+      EmployeeLocation employeeLocation = EmployeeLocation.fromJSON(
+          element['employeeLocation']);
+      var locationDateRange = LocationDateRange(
+          employeeLocation: employeeLocation,
+          startDate: startDate,
+          endDate: endDate);
+      futureLocationDateRanges.add(locationDateRange);
+    });
+  }
+
+  return futureLocationDateRanges;
+}
+
 Future<bool> setLocation(EmployeeLocation location) async {
   var employeeLocationSetBoolJSON =
       await postRequest("setLocation", parameters: location.toMap());
   return employeeLocationSetBoolJSON['success'];
+}
+
+DateFormat acceptedFormat = new DateFormat("yyyy-MM-dd");
+
+Future<bool> clearFutureLocations(DateTime startDate, DateTime endDate) async {
+  Map<String, String> dateParameters = {
+    "startDate": acceptedFormat.format(startDate),
+    "endDate": acceptedFormat.format(endDate),
+  };
+
+  var clearFutureLocationsBoolJSON =
+      await postRequest("clearFutureLocations", parameters: dateParameters);
+  return clearFutureLocationsBoolJSON['success'];
+}
+
+Future<bool> setFutureLocations(LocationDateRange locationDateRange) async {
+  Map<String, String> locationDateParameters = {
+    "startDate": acceptedFormat.format(locationDateRange.startDate),
+    "endDate": acceptedFormat.format(locationDateRange.endDate),
+  };
+  locationDateParameters.addAll(locationDateRange.employeeLocation.toMap());
+
+  var futureEmployeeLocationsSetBoolJSON =
+  await postRequest("setFutureLocations", parameters: locationDateParameters);
+  return futureEmployeeLocationsSetBoolJSON['success'];
 }
 
 Future<Employee> getEmployee() async {
@@ -35,9 +83,9 @@ Future<Employee> getEmployee() async {
   return Employee.fromJSON(employeeJSON);
 }
 
-Future<Map<String, dynamic>> postRequest(String functionURL,
+Future<dynamic> postRequest(String functionURL,
     {Map<String, String> parameters}) async {
-  Map<String, dynamic> output;
+  dynamic output;
   var response = await http.post(
     employeeURL + functionURL,
     headers: {
