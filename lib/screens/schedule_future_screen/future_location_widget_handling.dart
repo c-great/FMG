@@ -29,11 +29,6 @@ Widget getLocationDateRangeDisplayWidget(
             title: Text("From"),
             subtitle: Text(new DateFormat.yMMMMEEEEd()
                 .format(locationDateRange.startDate)),
-          ),
-          ListTile(
-            title: Text("To"),
-            subtitle: Text(
-                new DateFormat.yMMMMEEEEd().format(locationDateRange.endDate)),
             trailing: Row(mainAxisSize: MainAxisSize.min, children: <Widget>[
               IconButton(
                 icon: Icon(Icons.delete_forever),
@@ -51,6 +46,11 @@ Widget getLocationDateRangeDisplayWidget(
                 },
               ),
             ]),
+          ),
+          ListTile(
+            title: Text("To"),
+            subtitle: Text(
+                new DateFormat.yMMMMEEEEd().format(locationDateRange.endDate)),
           ),
         ],
       ));
