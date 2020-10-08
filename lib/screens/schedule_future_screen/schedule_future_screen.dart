@@ -7,13 +7,14 @@ import 'package:fmg_remote_work_tracker/server_interaction/basic_interaction.dar
 class ScheduleFutureScreen extends StatefulWidget {
   final EmployeeAbsent defaultAbsence;
   final EmployeeAtOffice defaultOffice;
+  final Future<DateTime> dateOfInterestFuture;
 
-  ScheduleFutureScreen({this.defaultAbsence, this.defaultOffice});
+  ScheduleFutureScreen({this.defaultAbsence, this.defaultOffice, this.dateOfInterestFuture});
 
   @override
   _ScheduleFutureScreenState createState() {
     return _ScheduleFutureScreenState(
-        defaultAbsence: defaultAbsence, defaultOffice: defaultOffice);
+        defaultAbsence: defaultAbsence, defaultOffice: defaultOffice, dateOfInterestFuture: dateOfInterestFuture);
   }
 }
 
@@ -22,8 +23,9 @@ class _ScheduleFutureScreenState extends State<ScheduleFutureScreen> {
 
   final EmployeeAbsent defaultAbsence;
   final EmployeeAtOffice defaultOffice;
+  final Future<DateTime> dateOfInterestFuture;
 
-  _ScheduleFutureScreenState({this.defaultAbsence, this.defaultOffice});
+  _ScheduleFutureScreenState({this.defaultAbsence, this.defaultOffice, this.dateOfInterestFuture});
 
   @override
   void initState() {
@@ -47,7 +49,7 @@ class _ScheduleFutureScreenState extends State<ScheduleFutureScreen> {
           return createFutureLocationDialog(context, () {
             updateFutureLocations();
           }, defaultAbsence, defaultOffice, employeeLocation,
-              initialStart: startDate, initialEnd: endDate);
+              initialStart: startDate, initialEnd: endDate, dateOfInterestFuture: dateOfInterestFuture);
         });
   }
 
@@ -79,7 +81,8 @@ class _ScheduleFutureScreenState extends State<ScheduleFutureScreen> {
                   return createFutureLocationDialog(context, () {
                     updateFutureLocations();
                   }, defaultAbsence, defaultOffice,
-                      EmployeeLocation(location: Location.UNDEFINED));
+                      EmployeeLocation(location: Location.UNDEFINED),
+                      dateOfInterestFuture: dateOfInterestFuture);
                 });
           }),
     );

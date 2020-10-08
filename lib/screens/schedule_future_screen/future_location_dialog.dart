@@ -12,7 +12,8 @@ SimpleDialog createFutureLocationDialog(
     EmployeeAtOffice defaultOffice,
     EmployeeLocation startingLocation,
     {DateTime initialStart,
-    DateTime initialEnd}) {
+    DateTime initialEnd,
+    Future<DateTime> dateOfInterestFuture}) {
 
   DateTimeRange dateRange;
   EmployeeLocation employeeLocation = startingLocation;
@@ -30,6 +31,7 @@ SimpleDialog createFutureLocationDialog(
       DateRangePicker(
         initialStart: initialStart,
         initialEnd: initialEnd,
+        dateOfInterestFuture: dateOfInterestFuture,
         updateDateRange: (data) {
           dateRange = data;
         },
@@ -49,14 +51,8 @@ SimpleDialog createFutureLocationDialog(
                   startDate: dateRange.start,
                   endDate: dateRange.end);
 
-              // wait for both clears to finish (they run simultaneously)
+              // clear all old dates if editing
               if (initialStart != null && initialEnd != null) {
-                await Future.wait([
-                  clearFutureLocations(initialStart, initialEnd),
-                  clearFutureLocations(futureLocations.startDate, futureLocations.endDate)]);
-              }
-              // otherwise, just wait to clear the dates we are trying to set
-              else {
                 await clearFutureLocations(
                     futureLocations.startDate, futureLocations.endDate);
               }

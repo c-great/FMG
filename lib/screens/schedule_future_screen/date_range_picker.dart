@@ -7,15 +7,22 @@ class DateRangePicker extends StatefulWidget {
 
   final DateTime initialStart;
   final DateTime initialEnd;
+  final Future<DateTime> dateOfInterestFuture;
 
-  DateRangePicker({this.updateDateRange, this.initialStart, this.initialEnd});
+  DateRangePicker(
+      {this.updateDateRange,
+      this.initialStart,
+      this.initialEnd,
+      this.dateOfInterestFuture});
 
   @override
   State<StatefulWidget> createState() {
     return _DateRangePickerState(
-        updateDateRange: updateDateRange,
-        initialStart: initialStart,
-        initialEnd: initialEnd);
+      updateDateRange: updateDateRange,
+      initialStart: initialStart,
+      initialEnd: initialEnd,
+      dateOfInterestFuture: dateOfInterestFuture,
+    );
   }
 }
 
@@ -28,9 +35,13 @@ class _DateRangePickerState extends State<DateRangePicker> {
 
   DateTime initialStart;
   DateTime initialEnd;
+  final Future<DateTime> dateOfInterestFuture;
 
   _DateRangePickerState(
-      {@required this.updateDateRange, this.initialStart, this.initialEnd});
+      {@required this.updateDateRange,
+      this.initialStart,
+      this.initialEnd,
+      this.dateOfInterestFuture});
 
   @override
   initState() {
@@ -46,16 +57,21 @@ class _DateRangePickerState extends State<DateRangePicker> {
     return Column(
       children: [
         LargeButton(
-          child: Text("Select/Edit Date Range"),
-          callback: () {
+          child: Row(children: [
+            Expanded(child: Center(child: Text("Select/Edit Date Range"))),
+            Icon(Icons.date_range),
+          ]),
+          callback: () async {
+            DateTime dayOfInterest = await dateOfInterestFuture;
             setState(() {
               futureDateRange = showDateRangePicker(
                 context: context,
-                firstDate: DateTime.now(),
-                initialDateRange: (dateRange != null)
-                    ? dateRange
-                    : null,
-                lastDate: DateTime.now().add(Duration(days: 400)),
+                cancelText: "Discard",
+                confirmText: "Confirm",
+                // ensure the user can only select days starting from tomorrow
+                firstDate: dayOfInterest.add(Duration(days: 1)),
+                initialDateRange: (dateRange != null) ? dateRange : null,
+                lastDate: dayOfInterest.add(Duration(days: 400)),
               );
             });
           },
@@ -70,6 +86,8 @@ class _DateRangePickerState extends State<DateRangePicker> {
               return Text(
                   "${dateFormat.format(dateRange.start)} - ${dateFormat.format(dateRange.end)}");
             } else {
+              dateRange = null;
+              updateDateRange(dateRange);
               return Text("No Dates Set");
             }
           },
