@@ -14,20 +14,20 @@ Stream relevantDateStream = relevantDateDataStreamController.stream;
 Future<dynamic> handleMessage(Map<String, dynamic> message) async {
   // ignore notifications, only handle data messages
   if (message.containsKey('data')) {
-    final Map<String, String> data = message['data'];
+    final Map data = message['data'];
 
-    print(data['location']);
-    print(data.containsKey('location'));
+    // stream employee location data message
+    if (data.containsKey('location')) {
+      var castMap = data.cast<String, dynamic>();
+      EmployeeLocation employeeLocation = EmployeeLocation.fromJSON(castMap);
+      employeeLocationDataStreamController.add(employeeLocation);
+    }
 
     // stream date data message
     if (data.containsKey('date')) {
       relevantDateDataStreamController.add(DateTime.parse(data['date']));
     }
-    // stream employee location data message
-    else if (data.containsKey('location')) {
-      EmployeeLocation employeeLocation = EmployeeLocation.fromJSON(data);
-      employeeLocationDataStreamController.add(employeeLocation);
-    }
+
   }
 }
 
