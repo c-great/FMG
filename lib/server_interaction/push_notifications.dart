@@ -1,19 +1,34 @@
-// base code from: https://medium.com/@SebastianEngel/easy-push-notifications-with-flutter-and-firebase-cloud-messaging-d96084f5954f
+import 'dart:async';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:fmg_remote_work_tracker/models/employee_location.dart';
 
-Future<dynamic> myBackgroundMessageHandler(Map<String, dynamic> message) async {
+
+// these streams will be used to pass information from push messages to listeners
+StreamController<EmployeeLocation> employeeLocationDataStreamController = StreamController<EmployeeLocation>();
+Stream employeeLocationStream = employeeLocationDataStreamController.stream;
+
+StreamController<DateTime> relevantDateDataStreamController = StreamController<DateTime>();
+Stream relevantDateStream = relevantDateDataStreamController.stream;
+
+Future<dynamic> handleMessage(Map<String, dynamic> message) async {
+  // ignore notifications, only handle data messages
   if (message.containsKey('data')) {
-    // Handle data message
-    final dynamic data = message['data'];
-  }
+    final Map<String, String> data = message['data'];
 
-  if (message.containsKey('notification')) {
-    // Handle notification message
-    final dynamic notification = message['notification'];
-  }
+    print(data['location']);
+    print(data.containsKey('location'));
 
-  // Or do other work.
+    // stream date data message
+    if (data.containsKey('date')) {
+      relevantDateDataStreamController.add(DateTime.parse(data['date']));
+    }
+    // stream employee location data message
+    else if (data.containsKey('location')) {
+      EmployeeLocation employeeLocation = EmployeeLocation.fromJSON(data);
+      employeeLocationDataStreamController.add(employeeLocation);
+    }
+  }
 }
 
 class PushNotificationsManager {
@@ -32,16 +47,8 @@ class PushNotificationsManager {
       // For iOS request permission first.
       _firebaseMessaging.requestNotificationPermissions();
       _firebaseMessaging.configure(
-        onMessage: (Map<String, dynamic> message) async {
-          print("onMessage: $message");
-        },
-        onBackgroundMessage: myBackgroundMessageHandler,
-        onLaunch: (Map<String, dynamic> message) async {
-          print("onLaunch: $message");
-        },
-        onResume: (Map<String, dynamic> message) async {
-          print("onResume: $message");
-        },
+        onMessage: handleMessage,
+        onBackgroundMessage: handleMessage,
       );
 
       _initialized = true;

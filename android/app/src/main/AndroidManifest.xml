@@ -6,7 +6,7 @@
          additional functionality it is fine to subclass or reimplement
          FlutterApplication and put your custom class here. -->
     <application
-        android:name="nz.ac.massey.u159356.group4.fmg_remote_work_tracker.Application"
+        android:name=".Application"
         android:label="fmg_remote_work_tracker"
         android:icon="@mipmap/ic_launcher">
         <activity

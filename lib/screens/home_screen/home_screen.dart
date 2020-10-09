@@ -8,6 +8,7 @@ import 'package:fmg_remote_work_tracker/screens/login_screen/login_screen.dart';
 import 'package:fmg_remote_work_tracker/screens/profile_screen/profile_screen.dart';
 import 'package:fmg_remote_work_tracker/screens/schedule_future_screen/schedule_future_screen.dart';
 import 'package:fmg_remote_work_tracker/server_interaction/basic_interaction.dart';
+import 'package:fmg_remote_work_tracker/server_interaction/push_notifications.dart';
 import 'package:fmg_remote_work_tracker/models/employee_location.dart';
 import 'package:fmg_remote_work_tracker/components/buttons.dart';
 import 'location_display.dart';
@@ -21,7 +22,7 @@ class HomePage extends StatefulWidget {
   _HomePageState createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   Future<EmployeeLocation> _location;
   Future<EmployeeAtOffice> defaultOfficeFuture;
   Future<EmployeeAbsent> defaultAbsenceFuture;
@@ -34,11 +35,44 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
 
+    WidgetsBinding.instance.addObserver(this);
+
     defaultAbsenceFuture = getDefaultAbsence();
     defaultOfficeFuture = getDefaultOffice();
 
     _location = getLocation();
     dateOfInterestFuture = getDateOfInterest();
+
+    // listen to date stream for push data messages
+    relevantDateStream.listen((date) {
+      setState(() {
+        dateOfInterestFuture = Future.value(date);
+      });
+    });
+
+    // listen to employee location stream for push data messages
+    employeeLocationStream.listen((employeeLocation) {
+      setState(() {
+        _location = Future.value(employeeLocation);
+      });
+    });
+  }
+
+  // recheck location and date on resume
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if(state == AppLifecycleState.resumed){
+      setState(() {
+        _location = getLocation();
+        dateOfInterestFuture = getDateOfInterest();
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
   }
 
   Future<void> _updateLocation(EmployeeLocation employeeLocation) async {
