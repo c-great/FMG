@@ -1,6 +1,35 @@
-// base code from: https://medium.com/@SebastianEngel/easy-push-notifications-with-flutter-and-firebase-cloud-messaging-d96084f5954f
+import 'dart:async';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:fmg_remote_work_tracker/models/employee_location.dart';
+
+
+// these streams will be used to pass information from push messages to listeners
+StreamController<EmployeeLocation> employeeLocationDataStreamController = StreamController<EmployeeLocation>();
+Stream employeeLocationStream = employeeLocationDataStreamController.stream;
+
+StreamController<DateTime> relevantDateDataStreamController = StreamController<DateTime>();
+Stream relevantDateStream = relevantDateDataStreamController.stream;
+
+Future<dynamic> handleMessage(Map<String, dynamic> message) async {
+  // ignore notifications, only handle data messages
+  if (message.containsKey('data')) {
+    final Map data = message['data'];
+
+    // stream employee location data message
+    if (data.containsKey('location')) {
+      var castMap = data.cast<String, dynamic>();
+      EmployeeLocation employeeLocation = EmployeeLocation.fromJSON(castMap);
+      employeeLocationDataStreamController.add(employeeLocation);
+    }
+
+    // stream date data message
+    if (data.containsKey('date')) {
+      relevantDateDataStreamController.add(DateTime.parse(data['date']));
+    }
+
+  }
+}
 
 class PushNotificationsManager {
 
@@ -17,7 +46,10 @@ class PushNotificationsManager {
     if (!_initialized) {
       // For iOS request permission first.
       _firebaseMessaging.requestNotificationPermissions();
-      _firebaseMessaging.configure();
+      _firebaseMessaging.configure(
+        onMessage: handleMessage,
+        onBackgroundMessage: handleMessage,
+      );
 
       _initialized = true;
     }
