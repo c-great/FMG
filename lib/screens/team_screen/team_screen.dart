@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:fmg_remote_work_tracker/models/employee.dart';
 import 'package:fmg_remote_work_tracker/models/employee_location.dart';
 import 'dart:core';
 
 import 'package:fmg_remote_work_tracker/screens/list_screen/team_edit_options_list.dart';
-// fixme: Clean up all the useless comments when done.
+import 'package:fmg_remote_work_tracker/server_interaction/basic_interaction.dart';
+// fixme: Clean up all the useless comments when done. Most likely also the Team class itself
 // Screen for displaying team information.
 
 // Init empty lists to use for tracking and display information
@@ -13,6 +15,12 @@ List<String> teamAttendance =  [];
 List<String> teamLocation =  [];
 List<String> teamNumber =  [];
 String chosenEdit;
+// Inits so we can use variables from Future functions outside of Future functions.
+List<Employee> teamMembers = [];
+Location thisMemberLocation;
+EmployeeAtOffice thisMemberOffice;
+// Only needed if no office is found.
+EmployeeAtOffice defaultOffice = new EmployeeAtOffice();
 
 class Team { //extends EmployeeInfo
   String name, attendance, location, team;
@@ -63,6 +71,25 @@ _navigateTeamEditOptionsScreen(BuildContext context) async {
 
 }
 
+// Gets the location (actually attendance) of an individual by ID. And the office.
+void getMemberLocation(String id) async {
+  var _location = await getLocationFromID(id);
+  try {
+    thisMemberOffice = _location;
+  } catch (e) {
+    print(e);
+    defaultOffice.officeLocation = "No Office";
+    thisMemberOffice = defaultOffice;
+  }
+  thisMemberLocation = _location.location;
+}
+
+// Initialise all team members.
+void initTeamMembers() async {
+  List<Employee> getTeam = await getDirectReports();
+  teamMembers = getTeam;
+}
+
 // Team Page state
 class TeamPage extends StatefulWidget {
   @override
@@ -88,6 +115,7 @@ class EditText extends State<TeamPage> {
   @override
   Widget build(BuildContext context) {
   initTeam();
+  initTeamMembers();
     return Scaffold(
 //      appBar: AppBar(
 //        title: Text("Editable Text"),
@@ -127,22 +155,22 @@ class EditText extends State<TeamPage> {
       );
     return Scaffold(
       appBar: AppBar(
-        title: Text("My Teams"),
+        title: Text("My Team"),
       ),
-      body: Column ( //GridView.count
+      body: Column (
         // Generate widgets that display a team member name, attendance and location.
-        children: List.generate(teamName.length, (index) {
-          var name = teamName[index];
-          var attendance = teamAttendance[index];
-          var location = teamLocation[index];
-          var number = teamNumber[index];
+        children: List.generate(teamMembers.length, (index) {
+          var firstName = teamMembers[index].firstName;
+          var attendance = thisMemberLocation.asString();
+          var location = thisMemberOffice.officeLocation;
+          getMemberLocation(teamMembers[index].employeeID);
           return SizedBox(
             width: double.infinity,
             height: 50,
             child: Wrap(runSpacing: 10, children: <Widget>[
               RaisedButton(
                 child: Row(children: <Widget>[
-                  Expanded(child: Text('$name , $attendance , $location'))
+                  Expanded(child: Text('$firstName, $attendance, $location'))
                 ]),
                 onPressed: () async {
                   // Update nameNumber so we know which person to update
@@ -173,19 +201,3 @@ class EditText extends State<TeamPage> {
     );
   }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
