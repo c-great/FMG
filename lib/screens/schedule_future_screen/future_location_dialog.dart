@@ -64,3 +64,37 @@ SimpleDialog createFutureLocationDialog(
     ],
   );
 }
+
+SimpleDialog editLocationDialog(
+    BuildContext context,
+    EmployeeAbsent defaultAbsence,
+    EmployeeAtOffice defaultOffice,
+    EmployeeLocation startingLocation) {
+
+  EmployeeLocation employeeLocation = startingLocation;
+
+  return SimpleDialog(
+    children: <Widget>[
+      LocationPicker(
+        defaultAbsence: defaultAbsence,
+        defaultOffice: defaultOffice,
+        startingLocation: startingLocation,
+        updateLocation: (data) {
+          employeeLocation = data;
+        },
+      ),
+      SizedBox(
+        height: 10,
+      ),
+      IconButton(
+          icon: Icon(
+            Icons.check_circle_outline,
+            color: Theme.of(context).primaryColor,
+          ),
+          onPressed: () async {
+            EmployeeLocation result = employeeLocation;
+            Navigator.pop(context, result);
+          }),
+    ],
+  );
+}
