@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:fmg_remote_work_tracker/models/employee.dart';
 import 'package:fmg_remote_work_tracker/models/employee_location.dart';
+import 'package:fmg_remote_work_tracker/screens/home_screen/manage_defaults.dart';
 import 'dart:core';
 
 import 'package:fmg_remote_work_tracker/screens/list_screen/team_edit_options_list.dart';
+import 'package:fmg_remote_work_tracker/screens/schedule_future_screen/future_location_dialog.dart';
+import 'package:fmg_remote_work_tracker/screens/schedule_future_screen/schedule_future_screen.dart';
 import 'package:fmg_remote_work_tracker/server_interaction/basic_interaction.dart';
 // fixme: Clean up all the useless comments when done. Most likely also the Team class itself
 // Screen for displaying team information.
@@ -18,14 +21,13 @@ String chosenEdit;
 // Inits so we can use variables from Future functions outside of Future functions.
 List<Employee> teamMembers = [];
 Location thisMemberLocation;
-EmployeeAtOffice thisMemberOffice;
-// Only needed if no office is found.
-EmployeeAtOffice defaultOffice = new EmployeeAtOffice();
+EmployeeLocation thisMemberEmployeeLocation;
+EmployeeAbsent thisMemberAbsent = new EmployeeAbsent();
+EmployeeAtOffice thisMemberOffice = new EmployeeAtOffice();
 
 class Team { //extends EmployeeInfo
   String name, attendance, location, team;
   Team(this.name, this.attendance, this.location, this.team) {
-    matchTeam();
     teamList.add(name+","+attendance+","+location+","+team);
     teamName.add(name);
     teamAttendance.add(attendance);
@@ -33,15 +35,6 @@ class Team { //extends EmployeeInfo
     teamNumber.add(team);
   }
 
-  void matchTeam() {
-    if (team == "Team1") {
-//      print("Team1");
-    } else if (team == "Team2") {
-//      print("Team2");
-    } else {
-//      print("NotEqual");
-    }
-  }
   // So that teamList addition in the constructor actually get added
   void callConstructor() {
 //    matchTeam();
@@ -78,14 +71,22 @@ void getMemberLocation(String id) async {
     thisMemberOffice = _location;
   } catch (e) {
     print(e);
-    defaultOffice.officeLocation = "No Office";
-    thisMemberOffice = defaultOffice;
+    thisMemberOffice.officeLocation = "No Office";
+  }
+  try {
+    thisMemberAbsent = _location;
+  } catch (e1) {
+    print(e1);
+//    thisMemberAbsent = _location;
   }
   thisMemberLocation = _location.location;
+  thisMemberEmployeeLocation = _location;
 }
 
 // Initialise all team members.
 void initTeamMembers() async {
+  thisMemberAbsent = await getDefaultAbsence();
+  thisMemberOffice = await getDefaultOffice(); //.officeLocation = "No Office";
   List<Employee> getTeam = await getDirectReports();
   teamMembers = getTeam;
 }
@@ -160,10 +161,10 @@ class EditText extends State<TeamPage> {
       body: Column (
         // Generate widgets that display a team member name, attendance and location.
         children: List.generate(teamMembers.length, (index) {
+          getMemberLocation(teamMembers[index].employeeID);
           var firstName = teamMembers[index].firstName;
           var attendance = thisMemberLocation.asString();
           var location = thisMemberOffice.officeLocation;
-          getMemberLocation(teamMembers[index].employeeID);
           return SizedBox(
             width: double.infinity,
             height: 50,
@@ -173,25 +174,26 @@ class EditText extends State<TeamPage> {
                   Expanded(child: Text('$firstName, $attendance, $location'))
                 ]),
                 onPressed: () async {
-                  // Update nameNumber so we know which person to update
-                  nameNumber = index;
-                  // Path to attendance/location options, the choice is returned as result.
-                  final result = await Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => TeamEditOptionsScreen()),
-                  );
-                    if (result == "Attendance") {
-                      // Set the shown text to what it is currently. Then start editing.
-                      _editingController.text = teamAttendance[nameNumber];
-                      setState(() {
-                        _isEditingAttendance = true;
-                      });
-                    } else if (result == "Location") {
-                      _editingController.text = teamLocation[nameNumber];
-                      setState(() {
-                        _isEditingLocation = true;
-                      });
-                    }
+                  // Dialog box for changing a specific members information. Returns new info when finished
+                  final result = await showDialog(
+                      context: context,
+                      builder: (BuildContext context) => editLocationDialog(
+                          context,
+                          thisMemberAbsent,
+                          thisMemberOffice,
+                          thisMemberEmployeeLocation),
+                      );
+                  if (result != null) {
+                    await setLocationFromID(result, teamMembers[index].employeeID); //Manual setLocationFromID(result, "1984") does update nmckubre as it should
+                    print("should set location of: "+teamMembers[index].employeeID);
+                  }
+//                    if (result is EmployeeAtOffice) {
+//                      print("office");
+//                    } else if (result is EmployeeAbsent) {
+//                      print("absent");
+//                    } else if (result is EmployeeAtHome) {
+//                      print("home");
+//                    }
                   },
               ),
             ]),
