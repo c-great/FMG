@@ -60,6 +60,12 @@ Future<bool> setLocation(EmployeeLocation location) async {
   return employeeLocationSetBoolJSON['success'];
 }
 
+Future<bool> setLocationFromID(EmployeeLocation location, String id) async {
+  var employeeLocationSetBoolJSON =
+  await postRequest("setLocationFromID"+"?employee_id="+id, parameters: location.toMap());
+  return employeeLocationSetBoolJSON['success'];
+}
+
 DateFormat acceptedFormat = new DateFormat("yyyy-MM-dd");
 
 Future<bool> clearFutureLocations(DateTime startDate, DateTime endDate) async {
