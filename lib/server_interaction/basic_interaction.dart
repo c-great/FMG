@@ -155,8 +155,10 @@ Future<Map<String, EmployeeLocation>> getDirectReportLocations() async {
   return reportingEmployeeLocations;
 }
 
-Future<bool> setDirectReportLocation(EmployeeLocation employeeLocation) async {
-  // set location here
+Future<bool> setDirectReportLocation(String employeeID, EmployeeLocation employeeLocation) async {
+  var employeeLocationMap = employeeLocation.toMap();
+  employeeLocationMap.putIfAbsent("employeeID", () => employeeID);
+
   var successJSON = await postRequestManager(
       "setLocation",
       parameters: employeeLocation.toMap());
