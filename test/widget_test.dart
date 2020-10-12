@@ -11,10 +11,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:fmg_remote_work_tracker/main.dart';
 import 'package:fmg_remote_work_tracker/server_interaction/basic_interaction.dart';
 
-import 'dart:convert' as convert;
-
-import 'package:http/http.dart' as http;
-
 void main() {
   testWidgets('Counter increments smoke test', (WidgetTester tester) async {
     // Build our app and trigger a frame.

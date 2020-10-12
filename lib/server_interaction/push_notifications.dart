@@ -5,10 +5,10 @@ import 'package:fmg_remote_work_tracker/models/employee_location.dart';
 
 
 // these streams will be used to pass information from push messages to listeners
-StreamController<EmployeeLocation> employeeLocationDataStreamController = StreamController<EmployeeLocation>();
+StreamController<EmployeeLocation> employeeLocationDataStreamController = StreamController<EmployeeLocation>.broadcast();
 Stream employeeLocationStream = employeeLocationDataStreamController.stream;
 
-StreamController<DateTime> relevantDateDataStreamController = StreamController<DateTime>();
+StreamController<DateTime> relevantDateDataStreamController = StreamController<DateTime>.broadcast();
 Stream relevantDateStream = relevantDateDataStreamController.stream;
 
 Future<dynamic> handleMessage(Map<String, dynamic> message) async {

@@ -318,7 +318,6 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     // this FutureBuilder is used to wait for the default values to be loaded
     return FutureBuilder<List>(
         future: Future.wait([defaultOfficeFuture, defaultAbsenceFuture]),
-        // stream data to listen for change
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             var defaultOffice = snapshot.data[0];
