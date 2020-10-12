@@ -23,8 +23,10 @@ Future<bool> setRegistrationToken() async {
   return tokenSetJSON['success'];
 }
 
-Future<EmployeeLocation> getLocationFromID(String id) async { //String id
-  var employeeLocationIDJSON = await postRequest("getLocationFromID"+"?employee_id="+id);
+Future<EmployeeLocation> getLocationFromID(String id) async {
+  //String id
+  var employeeLocationIDJSON =
+      await postRequest("getLocationFromID" + "?employee_id=" + id);
   return EmployeeLocation.fromJSON(employeeLocationIDJSON);
 }
 
@@ -41,8 +43,8 @@ Future<List<LocationDateRange>> getFutureLocations() async {
     futureLocationsJSON.forEach((element) {
       DateTime startDate = DateTime.parse(element['startDate']);
       DateTime endDate = DateTime.parse(element['endDate']);
-      EmployeeLocation employeeLocation = EmployeeLocation.fromJSON(
-          element['employeeLocation']);
+      EmployeeLocation employeeLocation =
+          EmployeeLocation.fromJSON(element['employeeLocation']);
       var locationDateRange = LocationDateRange(
           employeeLocation: employeeLocation,
           startDate: startDate,
@@ -61,8 +63,9 @@ Future<bool> setLocation(EmployeeLocation location) async {
 }
 
 Future<bool> setLocationFromID(EmployeeLocation location, String id) async {
-  var employeeLocationSetBoolJSON =
-  await postRequest("setLocationFromID"+"?employee_id="+id, parameters: location.toMap());
+  var employeeLocationSetBoolJSON = await postRequest(
+      "setLocationFromID" + "?employee_id=" + id,
+      parameters: location.toMap());
   return employeeLocationSetBoolJSON['success'];
 }
 
@@ -86,8 +89,9 @@ Future<bool> setFutureLocations(LocationDateRange locationDateRange) async {
   };
   locationDateParameters.addAll(locationDateRange.employeeLocation.toMap());
 
-  var futureEmployeeLocationsSetBoolJSON =
-  await postRequest("setFutureLocations", parameters: locationDateParameters);
+  var futureEmployeeLocationsSetBoolJSON = await postRequest(
+      "setFutureLocations",
+      parameters: locationDateParameters);
   return futureEmployeeLocationsSetBoolJSON['success'];
 }
 
@@ -108,7 +112,7 @@ Future<dynamic> postRequest(String functionURL,
   );
   if (response.statusCode == 200) {
     output = json.decode(response.body);
-  } else if (response.statusCode == 401){
+  } else if (response.statusCode == 401) {
     throw Exception("Invalid Username/Password");
   } else {
     throw Exception("Server Interaction Failed");
@@ -129,27 +133,49 @@ Future<DateTime> getDateOfInterest() async {
 
 // Gets Team Members. Named this way because it decides who members are by the manager_id they're assigned.
 Future<List<Employee>> getDirectReports() async {
-  var teamMembers = new List<Employee>();
+  var reportingEmployees = new List<Employee>();
   var employeeJSON = await postRequestManager("getDirectReports");
-  for (var i=0; i<employeeJSON.length; i++) {
-    teamMembers.add(Employee.fromJSON(employeeJSON[i]));
+  for (var i = 0; i < employeeJSON.length; i++) {
+    reportingEmployees.add(Employee.fromJSON(employeeJSON[i]));
   }
-  return teamMembers;
+  return reportingEmployees;
+}
+
+Future<Map<String, EmployeeLocation>> getDirectReportLocations() async {
+  Map<String, EmployeeLocation> reportingEmployeeLocations = new Map();
+  Map<String, dynamic> employeeLocationsJSON =
+      await postRequestManager("getLocations");
+  employeeLocationsJSON.forEach((employeeID, locationJSON) {
+    EmployeeLocation employeeLocation = EmployeeLocation.fromJSON(locationJSON);
+    reportingEmployeeLocations.putIfAbsent(employeeID, () {
+      return employeeLocation;
+    });
+  });
+
+  return reportingEmployeeLocations;
+}
+
+Future<bool> setDirectReportLocation(EmployeeLocation employeeLocation) async {
+  var successJSON = await postRequestManager(
+      "setLocation",
+      parameters: employeeLocation.toMap());
+
+  return successJSON['success'];
 }
 
 // For manager servlet.
-Future<List> postRequestManager(String functionURL) async {
-  List output;
+Future<dynamic> postRequestManager(String functionURL, {Map<String, String> parameters}) async {
+  dynamic output;
   var response = await http.post(
     managerURL + functionURL,
     headers: {
       HttpHeaders.authorizationHeader: "BASIC ${LoginInfo.getEncodedLogin()}"
     },
-//    body: parameters,
+   body: parameters,
   );
   if (response.statusCode == 200) {
     output = json.decode(response.body);
-  } else if (response.statusCode == 401){
+  } else if (response.statusCode == 401) {
     throw Exception("Invalid Username/Password");
   } else {
     throw Exception("Server Interaction Failed");
