@@ -156,6 +156,7 @@ Future<Map<String, EmployeeLocation>> getDirectReportLocations() async {
 }
 
 Future<bool> setDirectReportLocation(EmployeeLocation employeeLocation) async {
+  // set location here
   var successJSON = await postRequestManager(
       "setLocation",
       parameters: employeeLocation.toMap());
