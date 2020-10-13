@@ -64,38 +64,3 @@ SimpleDialog createFutureLocationDialog(
     ],
   );
 }
-
-SimpleDialog editLocationDialog(
-    BuildContext context,
-    String employeeID,
-    EmployeeAbsent defaultAbsence,
-    EmployeeAtOffice defaultOffice,
-    EmployeeLocation startingLocation) {
-
-  EmployeeLocation employeeLocation = startingLocation;
-void vun() {}
-  return SimpleDialog(
-    children: <Widget>[
-      LocationPicker(
-        defaultAbsence: defaultAbsence,
-        defaultOffice: defaultOffice,
-        startingLocation: startingLocation,
-        updateLocation: (data) {
-          employeeLocation = data;
-        },
-      ),
-      SizedBox(
-        height: 10,
-      ),
-      IconButton(
-          icon: Icon(
-            Icons.check_circle_outline,
-            color: Theme.of(context).primaryColor,
-          ),
-          onPressed: () {
-            setDirectReportLocation(employeeID, employeeLocation);
-            Navigator.pop(context);
-          }),
-    ],
-  );
-}

@@ -5,7 +5,6 @@ import 'package:intl/date_symbol_data_local.dart';
 import 'package:fmg_remote_work_tracker/theme/style.dart';
 import 'package:fmg_remote_work_tracker/screens/login_screen/login_screen.dart';
 import 'package:fmg_remote_work_tracker/screens/home_screen/home_screen.dart';
-import 'package:fmg_remote_work_tracker/screens/team_screen/team_screen.dart';
 import 'package:fmg_remote_work_tracker/server_interaction/push_notifications.dart';
 
 void main() {
@@ -30,7 +29,6 @@ class FmgApp extends StatelessWidget {
       home: LoginScreen(),
       // Routes are ways to navigate between screens.
       routes: <String, WidgetBuilder>{
-        '/TeamScreen': (BuildContext context) => TeamPage(),
         '/HomeScreen': (BuildContext context) =>
             HomePage(title: 'FMG - Remote Work Tracker'),
         '/LoginScreen': (BuildContext context) => LoginScreen(),

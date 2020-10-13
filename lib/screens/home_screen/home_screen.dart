@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:fmg_remote_work_tracker/data/login_info.dart';
 import 'package:fmg_remote_work_tracker/data/user_details.dart';
@@ -7,6 +9,7 @@ import 'package:fmg_remote_work_tracker/screens/list_screen/office_list_screen.d
 import 'package:fmg_remote_work_tracker/screens/login_screen/login_screen.dart';
 import 'package:fmg_remote_work_tracker/screens/profile_screen/profile_screen.dart';
 import 'package:fmg_remote_work_tracker/screens/schedule_future_screen/schedule_future_screen.dart';
+import 'package:fmg_remote_work_tracker/screens/team_screen/team_screen.dart';
 import 'package:fmg_remote_work_tracker/server_interaction/basic_interaction.dart';
 import 'package:fmg_remote_work_tracker/server_interaction/push_notifications.dart';
 import 'package:fmg_remote_work_tracker/models/employee_location.dart';
@@ -31,6 +34,9 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   EmployeeAtOffice selectedOfficeLocation;
   EmployeeAbsent selectedAbsenceType;
 
+  StreamSubscription dateListener;
+  StreamSubscription locationListener;
+
   @override
   void initState() {
     super.initState();
@@ -44,14 +50,14 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     dateOfInterestFuture = getDateOfInterest();
 
     // listen to date stream for push data messages
-    relevantDateStream.listen((date) {
+    dateListener = relevantDateStream.listen((date) {
       setState(() {
         dateOfInterestFuture = Future.value(date);
       });
     });
 
     // listen to employee location stream for push data messages
-    employeeLocationStream.listen((employeeLocation) {
+    locationListener = employeeLocationStream.listen((employeeLocation) {
       setState(() {
         _location = Future.value(employeeLocation);
       });
@@ -71,6 +77,8 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
 
   @override
   void dispose() {
+    locationListener.cancel();
+    dateListener.cancel();
     WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }
@@ -206,7 +214,8 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     );
   }
 
-  Widget _getTeamScreenButton() {
+  Widget _getTeamScreenButton({@required EmployeeAtOffice defaultOffice,
+  @required EmployeeAbsent defaultAbsence}) {
     if (user.manager) {
       return _expandedRow(children: [
         LargeButton(
@@ -217,7 +226,9 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
             Icon(Icons.people),
           ]),
           callback: () {
-            Navigator.pushNamed(context, '/TeamScreen');
+            Navigator.push(context, MaterialPageRoute( builder: (context) {
+              return TeamPage(defaultOffice: defaultOffice, defaultAbsence: defaultAbsence,);
+            }));
           },
         ),
       ]);
@@ -289,7 +300,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
           Spacer(
             flex: 1,
           ),
-          _getTeamScreenButton(),
+          _getTeamScreenButton(defaultAbsence: defaultAbsence, defaultOffice: defaultOffice),
           _expandedRow(children: [
             LargeButton(
                 child: Row(children: [

@@ -23,12 +23,6 @@ Future<bool> setRegistrationToken() async {
   return tokenSetJSON['success'];
 }
 
-Future<EmployeeLocation> getLocationFromID(String id) async {
-  var employeeLocationIDJSON =
-      await postRequest("getLocationFromID" + "?employee_id=" + id);
-  return EmployeeLocation.fromJSON(employeeLocationIDJSON);
-}
-
 Future<EmployeeLocation> getLocation() async {
   var employeeLocationJSON = await postRequest("getLocation");
   return EmployeeLocation.fromJSON(employeeLocationJSON);
@@ -58,13 +52,6 @@ Future<List<LocationDateRange>> getFutureLocations() async {
 Future<bool> setLocation(EmployeeLocation location) async {
   var employeeLocationSetBoolJSON =
       await postRequest("setLocation", parameters: location.toMap());
-  return employeeLocationSetBoolJSON['success'];
-}
-
-Future<bool> setLocationFromID(EmployeeLocation location, String id) async {
-  var employeeLocationSetBoolJSON = await postRequest(
-      "setLocationFromID" + "?employee_id=" + id,
-      parameters: location.toMap());
   return employeeLocationSetBoolJSON['success'];
 }
 
