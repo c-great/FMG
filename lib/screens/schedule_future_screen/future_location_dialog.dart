@@ -67,12 +67,13 @@ SimpleDialog createFutureLocationDialog(
 
 SimpleDialog editLocationDialog(
     BuildContext context,
+    String employeeID,
     EmployeeAbsent defaultAbsence,
     EmployeeAtOffice defaultOffice,
     EmployeeLocation startingLocation) {
 
   EmployeeLocation employeeLocation = startingLocation;
-
+void vun() {}
   return SimpleDialog(
     children: <Widget>[
       LocationPicker(
@@ -91,9 +92,9 @@ SimpleDialog editLocationDialog(
             Icons.check_circle_outline,
             color: Theme.of(context).primaryColor,
           ),
-          onPressed: () async {
-            EmployeeLocation result = employeeLocation;
-            Navigator.pop(context, result);
+          onPressed: () {
+            setDirectReportLocation(employeeID, employeeLocation);
+            Navigator.pop(context);
           }),
     ],
   );
