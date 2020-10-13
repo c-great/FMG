@@ -24,7 +24,6 @@ Future<bool> setRegistrationToken() async {
 }
 
 Future<EmployeeLocation> getLocationFromID(String id) async {
-  //String id
   var employeeLocationIDJSON =
       await postRequest("getLocationFromID" + "?employee_id=" + id);
   return EmployeeLocation.fromJSON(employeeLocationIDJSON);
