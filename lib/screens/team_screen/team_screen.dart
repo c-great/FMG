@@ -117,7 +117,6 @@ class _TeamPageState extends State<TeamPage> {
   @override
   void initState() {
     super.initState();
-
     reportingEmployeesFuture = getDirectReports();
     reportingEmployeeLocationsFuture = getDirectReportLocations();
 
@@ -212,6 +211,7 @@ class _TeamPageState extends State<TeamPage> {
                     context: context,
                     builder: (BuildContext context) => editLocationDialog(
                         context,
+                        teamMembers[index].employeeID,
                         thisMemberAbsent,
                         thisMemberOffice,
                         thisMemberEmployeeLocation),
