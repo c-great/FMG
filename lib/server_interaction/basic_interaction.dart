@@ -9,10 +9,10 @@ import 'package:fmg_remote_work_tracker/models/location_date_range.dart';
 import 'package:fmg_remote_work_tracker/server_interaction/push_notifications.dart';
 import 'package:http/http.dart' as http;
 
-var employeeURL =
-    "https://fmg-server.azurewebsites.net/FMG_REST_service/employee/";
-var managerURL =
-    "https://fmg-server.azurewebsites.net/FMG_REST_service/manager/";
+import 'package:fmg_remote_work_tracker/settings/server_settings.dart';
+
+var employeeURL =  serverURL + "employee/";
+var managerURL = serverURL + "manager/";
 
 // set device registration token on server so it can send push notifications
 Future<bool> setRegistrationToken() async {

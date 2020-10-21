@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:fmg_remote_work_tracker/data/office_list.dart';
+import 'file:///C:/Users/nmcku/AndroidStudioProjects/fmg_remote_work_tracker/lib/settings/office_list.dart';
 import 'package:fmg_remote_work_tracker/models/employee_location.dart';
 import 'package:fmg_remote_work_tracker/screens/list_screen/list_entry.dart';
 import 'package:fmg_remote_work_tracker/screens/list_screen/select_from_list_screen.dart';

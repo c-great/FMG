@@ -1,0 +1,1 @@
+var serverURL = "https://fmg-server.azurewebsites.net/FMG_REST_service/";
