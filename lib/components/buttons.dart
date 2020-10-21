@@ -127,9 +127,9 @@ Widget _makeSelectScreenButtonLabel(
     return Column(
       children: <Widget>[
         Spacer(flex: 8,),
-        Expanded(flex: 5, child: Text(main),),
+        Center(child: Text(main)),
         Spacer(flex: 1,),
-        Expanded(flex: 5, child: Text(sub, style: Theme.of(context).primaryTextTheme.subtitle1),),
+        Center(child: Text(sub, style: Theme.of(context).primaryTextTheme.subtitle1)),
         Spacer(flex: 8,),
       ],
     );
